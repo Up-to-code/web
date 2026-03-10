@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import type { ZoneDescriptor } from "../_lib/zones";
-import { AIMotionLogo } from "./AIMotion";
-import WorkspaceChatInput from "./WorkspaceChatInput";
+import type { ZoneDescriptor } from "../../_lib/zones";
+import { AIMotionLogo } from "../../_components/AIMotion";
+import WorkspaceChatInput from "../../_components/WorkspaceChatInput";
 
 export default function WorkspaceZoneGrid({
   organizationName,

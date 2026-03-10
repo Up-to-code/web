@@ -1,5 +1,5 @@
 import OrganizationOnboarding from "../_components/OrganizationOnboarding";
-import WorkspaceDashboard from "../_components/WorkspaceDashboard";
+import WorkspaceDashboard from "./_components/WorkspaceDashboard";
 import { requireWorkspaceData } from "../_lib/workspaceData";
 
 type WorkspacePageProps = {

@@ -1,6 +1,6 @@
 import WorkspaceZoneGrid from "./WorkspaceZoneGrid";
-import { formatWorkspaceOrganizationName } from "../_lib/organizationDisplay";
-import { getWorkspaceZones, type WorkspaceRole } from "../_lib/zones";
+import { formatWorkspaceOrganizationName } from "../../_lib/organizationDisplay";
+import { getWorkspaceZones, type WorkspaceRole } from "../../_lib/zones";
 import type { SessionUser } from "@/lib/serverSession";
 
 type Organization = {
