@@ -12,15 +12,21 @@ export default function Footer() {
                 <div className="flex flex-col lg:flex-row justify-between gap-24">
                     {/* Brand & Tagline */}
                     <div className="space-y-8 max-w-sm">
-                        <Link href="/" className="inline-block invert brightness-0 grayscale -mr-6">
-                            <Image
-                                src="/brand-logo.svg"
-                                alt="عنان"
-                                width={180}
-                                height={180}
-                                className="h-24 w-auto"
-                            />
-                        </Link>
+                        <div className="flex items-center gap-4">
+                            <Link href="/" className="inline-flex items-center justify-center rounded-3xl border border-slate-700 bg-slate-950 p-3">
+                                <Image
+                                    src="/brand-mark.svg"
+                                    alt="عنان"
+                                    width={56}
+                                    height={56}
+                                    className="h-14 w-14"
+                                />
+                            </Link>
+                            <div className="space-y-2">
+                                <div className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-400">ANAN</div>
+                                <div className="text-sm font-black text-white">البنية العقارية الذكية</div>
+                            </div>
+                        </div>
                         <p className="text-slate-400 font-bold text-sm leading-relaxed uppercase tracking-widest">
                             البنية التحتية الذكية للعقار السيادي السعودي. <br />
                             الدقة المهنية في خدمة رؤية ٢٠٣٠.

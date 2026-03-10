@@ -12,9 +12,13 @@ import SectionLabel from "@/components/shared/SectionLabel";
 export default function DeveloperPage() {
     return (
         <main>
-            <Section bg="slate" className="pt-40">
+            <Section bg="slate" className="pt-40 relative overflow-hidden">
+                {/* Background SVG Grid */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <img src="/vectors/landing/hero_grid.svg" className="w-full h-full object-cover" alt="" />
+                </div>
                 <PageHero
-                    className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center"
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center relative z-10"
                     contentClassName="space-y-12 text-right"
                     badge={
                         <SectionLabel
@@ -36,8 +40,8 @@ export default function DeveloperPage() {
                     descriptionClassName="text-xl text-slate-500 font-bold leading-relaxed max-w-xl"
                     actions={
                         <ActionRow className="flex flex-col sm:flex-row gap-8 pt-6">
-                            <Button href="/signin" variant="primary">تسجيل مشروع جديد</Button>
-                            <Button variant="outline">طلب البيانات التاريخية</Button>
+                            <Button href="/signin" variant="primary" className="px-12 py-5">تسجيل مشروع جديد</Button>
+                            <Button variant="outline" className="px-12 py-5 border-slate-200">طلب البيانات التاريخية</Button>
                         </ActionRow>
                     }
                     visual={

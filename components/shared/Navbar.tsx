@@ -8,13 +8,14 @@ export default function Navbar() {
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b-2 border-slate-100">
             <div className="max-w-[1400px] mx-auto flex items-center justify-between h-16 px-6">
                 <div className="flex items-center gap-12">
-                    <Link href="/" className="flex items-center">
+                    <Link href="/" className="flex items-center justify-center rounded-2xl border border-slate-200 bg-white p-2 transition hover:border-slate-300">
                         <Image
-                            src="/brand-logo.svg"
+                            src="/brand-mark.svg"
                             alt="عنان"
-                            width={120}
-                            height={120}
-                            className="h-20 w-auto -mr-6"
+                            width={40}
+                            height={40}
+                            className="h-10 w-10"
+                            priority
                         />
                     </Link>
 

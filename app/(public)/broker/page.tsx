@@ -132,14 +132,20 @@ export default function BrokerPage() {
             </Section>
 
             <Section bg="primary" className="py-48 text-center overflow-hidden relative border-none">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+                {/* Gateway SVG background */}
+                <div className="absolute -right-20 bottom-0 opacity-10 pointer-events-none">
+                    <img src="/vectors/landing/portal_gateway.svg" className="w-[400px] h-[400px]" alt="" />
+                </div>
+
                 <div className="max-w-4xl mx-auto space-y-12 relative z-10 text-white">
                     <h2 className="text-6xl font-black uppercase leading-tight">انضم إلى مجتمع <br /> الوسطاء الأذكى</h2>
                     <p className="text-xl font-bold opacity-80 max-w-xl mx-auto leading-relaxed">
                         كن جزءاً من البنية التحتية لعنان وابدأ في توسيع نطاق صفقاتك العقارية في جميع مدن المملكة.
                     </p>
                     <ActionRow className="flex flex-col sm:flex-row gap-8 justify-center pt-8">
-                        <Button href="/signin" variant="white" className="border-none">انضم للشبكة</Button>
-                        <Button href="/terms" variant="outline" className="border-white text-white hover:bg-white/10">شروط الاستخدام</Button>
+                        <Button href="/signin" variant="white" className="border-none shadow-2xl px-12 py-5">انضم للشبكة</Button>
+                        <Button href="/terms" variant="outline" className="border-white text-white hover:bg-white/10 px-12 py-5">شروط الاستخدام</Button>
                     </ActionRow>
                 </div>
             </Section>

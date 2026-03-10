@@ -129,3 +129,57 @@
     @apply font-sans;
   }
 }
+
+/* --- Anan Sharp Scrollbar (Chrome/Safari/Edge) --- */
+:root {
+  --sb-thumb: #0f172a;
+  --sb-thumb-hover: #2563eb;
+  --sb-track: transparent;
+}
+
+.dark {
+  --sb-thumb: #f8fafc;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) var(--sb-track);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sb-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb);
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@keyframes zone-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-zone-page-enter {
+  animation: zone-page-enter 180ms ease-out;
+}

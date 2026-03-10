@@ -9,8 +9,12 @@ import Section from "@/components/shared/Section";
 export default function AboutPage() {
     return (
         <main>
-            <Section bg="slate" className="pt-40">
+            <Section bg="slate" className="pt-40 relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
+                    <img src="/vectors/landing/ecosystem_hub.svg" className="w-[800px] h-[800px]" alt="" />
+                </div>
                 <PageHero
+                    className="relative z-10"
                     contentClassName="max-w-4xl mx-auto space-y-12 text-center"
                     title={<>عن عنان <br /><span className="text-blue-600">رؤية عقارية تقنية</span></>}
                     titleClassName="text-6xl font-black text-slate-900 uppercase"

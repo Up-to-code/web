@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { Cairo, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 const cairo = Cairo({
- 
+
   subsets: ["arabic", "latin"],
 });
 
@@ -27,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${cairo.className} ${geistMono.variable} antialiased font-sans`}
       >
-        {children}
+        <ConvexAuthNextjsServerProvider>{children}</ConvexAuthNextjsServerProvider>
       </body>
     </html>
   );
