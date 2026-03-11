@@ -6,6 +6,7 @@ import {
   MessageSquareQuote,
   Settings2,
   Sparkles,
+  Mail,
 } from "lucide-react";
 
 export type WorkspaceRole = string | null | undefined;
@@ -17,7 +18,7 @@ export type ZoneNavItem = {
 };
 
 export type ZoneDescriptor = {
-  key: "overview" | "market" | "projects" | "offers" | "crm" | "ai" | "settings";
+  key: "overview" | "market" | "projects" | "offers" | "crm" | "inbox" | "settings";
   label: string;
   href: string;
   description: string;
@@ -44,8 +45,10 @@ const zoneDescriptors: ZoneDescriptor[] = [
     href: "/ws/market",
     description: "تحليل الطلب والأسعار وسرعة البيع على مستوى المدن والأحياء للمطور.",
     icon: BarChart3,
-    roles: ["developer", "RED", "admin"],
-    localNav: [],
+    roles: ["developer", "RED", "broker", "admin", null, undefined],
+    localNav: [
+      { label: "نظرة عامة", href: "/ws/market" }
+    ],
   },
   {
     key: "projects",
@@ -55,26 +58,18 @@ const zoneDescriptors: ZoneDescriptor[] = [
     icon: Building2,
     roles: ["developer", "RED", "broker"],
     localNav: [
-      { label: "نظرة عامة", href: "/ws/projects" },
-      { label: "تكليفات الوسطاء", href: "/ws/projects/assignments" },
-      { label: "إنشاء مشروع", href: "/ws/projects/create" },
+      { label: "جميع المشاريع", href: "/ws/projects" },
     ],
   },
   {
     key: "offers",
     label: "العروض",
     href: "/ws/offers",
-    description: "متابعة العروض المرسلة والواردة والسوق المفتوح من مكان واحد.",
+    description: "سوق العروض العقارية — استعرض، أنشئ، وتقدم للفرص الاستثمارية.",
     icon: BriefcaseBusiness,
     roles: ["developer", "RED", "broker"],
     localNav: [
-      { label: "نظرة عامة", href: "/ws/offers" },
-      { label: "سوق المطورين", href: "/ws/offers/developer-marketplace" },
-      { label: "تعاون الوسطاء", href: "/ws/offers/broker-network" },
-      { label: "احتياجات العملاء", href: "/ws/offers/client-matches" },
-      { label: "صندوق الربط", href: "/ws/offers/inbox" },
-      { label: "نشر عرض", href: "/ws/offers/publish" },
-      { label: "إرسال عرض", href: "/ws/offers/send" },
+      { label: "سوق العروض", href: "/ws/offers" },
     ],
   },
   {
@@ -90,16 +85,13 @@ const zoneDescriptors: ZoneDescriptor[] = [
     ],
   },
   {
-    key: "ai",
-    label: "المساعد الذكي",
-    href: "/ws/ai",
-    description: "مساعد العمل الذكي للاستفسار والتحليل ومراجعة بيانات السوق.",
-    icon: Sparkles,
-    roles: ["developer", "RED", "broker", "admin", null, undefined],
-    localNav: [
-      { label: "المحادثة", href: "/ws/ai" },
-      { label: "السجل", href: "/ws/ai/history" },
-    ],
+    key: "inbox",
+    label: "البريد الوارد",
+    href: "/ws/inbox",
+    description: "إدارة المحادثات والتواصل مع الوسطاء والمستثمرين والمطورين.",
+    icon: Mail,
+    roles: ["developer", "RED", "broker"],
+    localNav: [],
   },
   {
     key: "settings",

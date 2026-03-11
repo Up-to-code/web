@@ -24,7 +24,7 @@ export default function ZoneShell({
   return (
     <div
       data-slot="zone-shell"
-      className="min-h-svh bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.08),_transparent_38%),linear-gradient(180deg,#f8fafc_0%,#ffffff_32%,#f8fbff_100%)] lg:flex lg:h-svh lg:overflow-hidden"
+      className="min-h-svh bg-slate-50 lg:flex lg:h-svh lg:overflow-hidden"
     >
       <div className={`hidden shrink-0 lg:flex lg:h-svh ${WORKSPACE_SIDEBAR_WIDTH_CLASS}`}>
         <ZoneSidebar zone={zone} user={user} organization={organization} />

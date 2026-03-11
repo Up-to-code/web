@@ -1,13 +1,10 @@
-import { redirect } from "next/navigation";
-import WorkspaceZoneShell from "../../_components/WorkspaceZoneShell";
+import WorkspaceShell from "../../_components/WorkspaceShell";
 import { getWorkspaceOrganizationDisplay } from "../../_lib/organizationDisplay";
 import { requireWorkspaceData } from "../../_lib/workspaceData";
-import { getWorkspaceZone, toZoneShellData } from "../../_lib/zones";
 
 /**
- * WHY:   CRM needs its own focused shell because deal management should not compete with the root workspace overview.
- * WHAT:  Wraps the CRM route in the current role-visible CRM zone layout.
- * HOW:   Resolves the workspace role and redirects unsupported roles back to `/ws`.
+ * WHY:   CRM now uses the unified workspace shell - no more separate zone.
+ * WHAT:  Wraps the CRM route with the main workspace layout.
  */
 export default async function CrmZoneLayout({
   children,
@@ -15,26 +12,24 @@ export default async function CrmZoneLayout({
   children: React.ReactNode;
 }) {
   const workspace = await requireWorkspaceData("/ws/crm");
-  const zone = getWorkspaceZone(workspace.session.role, "crm");
-
-  if (!zone) {
-    redirect("/ws");
-  }
-
   const primaryOrganization = workspace.organizations?.[0];
 
+  if (!primaryOrganization) {
+    return <div className="min-h-svh bg-white">{children}</div>;
+  }
+
   return (
-    <WorkspaceZoneShell
-      zone={toZoneShellData(zone)}
+    <WorkspaceShell
       user={workspace.user}
+      role={workspace.session.role}
       organization={getWorkspaceOrganizationDisplay({
         name: primaryOrganization?.name,
         type: primaryOrganization?.type,
         status: primaryOrganization?.status,
-        zoneLabel: zone.label,
+        zoneLabel: "إدارة العملاء",
       })}
     >
       {children}
-    </WorkspaceZoneShell>
+    </WorkspaceShell>
   );
 }

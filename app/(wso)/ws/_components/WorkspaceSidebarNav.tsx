@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, Sparkles } from "lucide-react";
+import { LayoutGrid, BarChart3, Building2, BriefcaseBusiness, MessageSquareQuote, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/ws", label: "لوحة العمل", icon: LayoutGrid },
-  { href: "/ws/ai", label: "الذكاء الاصطناعي", icon: Sparkles },
+  { href: "/ws/market", label: "ذكاء السوق", icon: BarChart3 },
+  { href: "/ws/projects", label: "المشاريع", icon: Building2 },
+  { href: "/ws/offers", label: "العروض", icon: BriefcaseBusiness },
+  { href: "/ws/crm", label: "إدارة العملاء", icon: MessageSquareQuote },
+  { href: "/ws/inbox", label: "البريد الوارد", icon: Mail },
 ];
 
 export default function WorkspaceSidebarNav() {
@@ -31,6 +35,7 @@ export default function WorkspaceSidebarNav() {
                 ? "border-blue-600 bg-blue-600 text-white"
                 : "border-transparent bg-transparent text-slate-500 hover:border-white/10 hover:bg-white/5 hover:text-white",
             )}
+            title={item.label}
           >
             <span className="flex items-center gap-3">
               <Icon className="h-3.5 w-3.5" />

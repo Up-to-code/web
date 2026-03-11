@@ -1,21 +1,20 @@
 import RouteTabBar from "../../_components/Visuals/RouteTabBar";
 
-/**
- * WHY:   The offers workspace should switch between its first-stage sections through visible route-backed tabs.
- * WHAT:  Renders the tabs for overview, marketplaces, client matches, and inbox/connectors.
- * HOW:   Delegates active-route handling to the shared route tab bar.
- */
 export default function OffersTabs() {
   return (
     <RouteTabBar
       tabs={[
-        { href: "/ws/offers", label: "نظرة عامة" },
-        { href: "/ws/offers/developer-marketplace", label: "سوق المطورين" },
-        { href: "/ws/offers/broker-network", label: "تعاون الوسطاء" },
-        { href: "/ws/offers/client-matches", label: "احتياجات العملاء" },
-        { href: "/ws/offers/inbox", label: "صندوق الربط" },
-        { href: "/ws/offers/publish", label: "نشر عرض" },
-        { href: "/ws/offers/send", label: "إرسال عرض" },
+        { href: "/ws/offers", label: "جميع العروض" },
+        { href: "/ws/offers/search", label: "البحث المتقدم" },
+        { 
+          href: "/ws/offers/inbox", 
+          label: (
+            <span className="flex items-center gap-2">
+              الرسائل
+              <span className="flex h-2 w-2 rounded-full bg-blue-600"></span>
+            </span>
+          ) as unknown as string // RouteTabBar expects string but accepts ReactNode internally usually, we'll cast it or handle it cleanly. Actually RouteTabBar types might be strict. Let's see. 
+        },
       ]}
     />
   );

@@ -204,3 +204,28 @@ export function updateProjectPublicationState(
     project.id === projectId ? { ...project, publicationState } : project,
   );
 }
+
+/**
+ * WHY:   Projects can be deleted from the workspace. The mock data needs a pure removal helper.
+ * WHAT:  Returns a new projects array with the given project id removed.
+ * HOW:   Filters out the matching id.
+ */
+export function deleteProject(projects: WorkspaceProject[], projectId: string): WorkspaceProject[] {
+  return projects.filter((project) => project.id !== projectId);
+}
+
+/**
+ * WHY:   Projects can be edited. The mock data needs a pure update helper.
+ * WHAT:  Returns a new projects array with the updated project merged in.
+ * HOW:   Maps over the array and replaces only the matching id.
+ */
+export function updateProject(
+  projects: WorkspaceProject[],
+  projectId: string,
+  updates: Partial<WorkspaceProject>,
+): WorkspaceProject[] {
+  return projects.map((project) =>
+    project.id === projectId ? { ...project, ...updates } : project,
+  );
+}
+

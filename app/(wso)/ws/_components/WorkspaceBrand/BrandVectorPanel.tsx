@@ -36,6 +36,7 @@ export default function BrandVectorPanel({
   imageSrc,
   imageAlt,
   imageMode = "vector",
+  size = "default",
   className,
 }: {
   title: string;
@@ -44,9 +45,11 @@ export default function BrandVectorPanel({
   imageSrc?: string;
   imageAlt?: string;
   imageMode?: "vector" | "photo";
+  size?: "default" | "large";
   className?: string;
 }) {
   const style = ACCENT_STYLES[accent];
+  const heightClass = size === "large" ? "min-h-[280px]" : "min-h-[220px]";
 
   return (
     <div
@@ -57,12 +60,12 @@ export default function BrandVectorPanel({
       )}
     >
       {imageMode === "photo" && imageSrc ? (
-        <div className="relative h-full min-h-[220px] overflow-hidden bg-slate-200">
+        <div className={cn("relative h-full overflow-hidden bg-slate-200", heightClass)}>
           <img src={imageSrc} alt={imageAlt ?? title} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/40 via-transparent to-white/10" />
         </div>
       ) : (
-        <div className={cn("relative min-h-[220px] bg-gradient-to-br", style.wash)}>
+        <div className={cn("relative bg-gradient-to-br", heightClass, style.wash)}>
           <svg viewBox="0 0 520 260" className="absolute inset-0 h-full w-full" aria-hidden="true">
             <rect x="0" y="0" width="520" height="260" fill="transparent" />
             <path d="M90 190 L170 120 L255 150 L335 82 L430 110" fill="none" stroke={style.muted} strokeWidth="18" strokeLinecap="round" />

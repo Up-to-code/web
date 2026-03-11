@@ -10,41 +10,52 @@ export default function OfferThreadCard({
 }: {
   thread: OfferThreadItem;
 }) {
-  const statusTone =
-    thread.status === "approved"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-      : thread.status === "awaiting-response"
-        ? "border-amber-200 bg-amber-50 text-amber-700"
-        : thread.status === "completed"
-          ? "border-blue-200 bg-blue-50 text-blue-700"
-          : "border-slate-200 bg-slate-50 text-slate-600";
+  const isApproved = thread.status === "approved";
+  const isCompleted = thread.status === "completed";
+  const isPending = thread.status === "awaiting-response";
+
+  const statusTone = isApproved
+    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+    : isPending
+      ? "border-amber-200 bg-amber-50 text-amber-700"
+      : isCompleted
+        ? "border-blue-200 bg-blue-50 text-blue-700"
+        : "border-slate-200 bg-slate-50 text-slate-600";
 
   return (
-    <article className="w-full max-w-[300px] border border-slate-200 bg-white">
-      <div className="space-y-4 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <div className="text-[10px] font-black tracking-[0.2em] text-blue-700">خيط ربط</div>
-            <h3 className="mt-2 text-base font-black text-slate-950">{thread.subject}</h3>
+    <article className="group flex flex-col gap-4 border-b border-slate-100 bg-white p-6 transition hover:bg-slate-50 sm:flex-row sm:items-start sm:justify-between cursor-pointer">
+      <div className="flex items-start gap-5 sm:items-start w-full max-w-2xl">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-slate-100 text-lg font-black text-slate-600 shadow-sm">
+          {(thread.sender.name || "U").slice(0, 1).toUpperCase()}
+        </div>
+        <div className="flex-1 min-w-0 pt-1">
+          <div className="flex items-center gap-3 mb-1">
+            <h3 className="text-base font-black text-slate-950 truncate">{thread.sender.name}</h3>
+            <span className="text-[10px] font-black tracking-widest text-slate-400 border border-slate-200 px-2 py-0.5 whitespace-nowrap">
+              إلى: {thread.recipient.name}
+            </span>
           </div>
-          <div className={`border px-2 py-1 text-[9px] font-black tracking-[0.16em] ${statusTone}`}>
+          <h4 className="text-sm font-bold text-slate-800 mb-2 truncate">{thread.subject}</h4>
+          <p className="text-sm leading-6 text-slate-500 line-clamp-2">
+            "{thread.summary}"
+          </p>
+        </div>
+      </div>
+
+      <div className="flex shrink-0 flex-col items-start gap-4 sm:items-end w-full sm:w-auto pt-1 sm:pt-0">
+        <div className="flex items-center gap-2">
+          <div className={`border px-3 py-1 text-[10px] font-black tracking-widest ${statusTone}`}>
             {thread.status}
           </div>
+          <div className="text-[11px] font-black tracking-widest text-slate-400 bg-slate-100 px-2 py-1">
+            المشروع: <span className="text-slate-700">{thread.relation.project?.title ?? "غير محدد"}</span>
+          </div>
         </div>
 
-        <div className="grid gap-2 text-sm font-medium text-slate-600">
-          <div>من: {thread.sender.name}</div>
-          <div>إلى: {thread.recipient.name}</div>
-          <div>المشروع: {thread.relation.project?.title ?? "غير محدد"}</div>
-          <div>الوحدة: {thread.relation.unit?.label ?? "على مستوى المشروع"}</div>
-        </div>
-
-        <p className="text-sm font-medium leading-6 text-slate-600">{thread.summary}</p>
-
-        <div className="border-t border-slate-200 pt-3">
-          <div className="text-[10px] font-black tracking-[0.18em] text-slate-400">آخر تحديث</div>
-          <div className="mt-1 text-sm font-black text-slate-950">{thread.lastUpdate}</div>
-          <div className="mt-2 text-[11px] font-medium text-blue-700">{thread.nextAction}</div>
+        <div className="w-full flex sm:justify-end mt-2">
+          <button className="border-2 border-slate-200 bg-white px-5 py-2 text-xs font-black tracking-widest text-slate-700 hover:border-blue-600 hover:text-blue-600 transition group-hover:bg-blue-50">
+            فتح المحادثة
+          </button>
         </div>
       </div>
     </article>

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export type BrandWorkspaceTab = {
   href: string;
-  label: string;
+  label: React.ReactNode;
 };
 
 /**

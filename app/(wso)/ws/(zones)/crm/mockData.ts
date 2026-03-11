@@ -1,4 +1,5 @@
 import type { BrokerPresence } from "../../_components/Visuals/BrokerPresenceChip";
+export type { BrokerPresence };
 import type { PersonBadge, PersonCardType, UnitReference } from "../../_lib/entities";
 
 export type PipelineStage = "new" | "qualified" | "proposal" | "won";
@@ -128,6 +129,51 @@ const CLIENTS: CrmClientRecord[] = [
     notes: "مرتبطة بالمشروع والوسيط معاً وجاهزة لعرض نهائي.",
   },
 ];
+
+const CO_BROKERS: BrokerPresence[] = [
+  ...BROKERS,
+  {
+    id: "broker-ahmed",
+    name: "أحمد بن علي",
+    avatarLabel: "أ",
+    personType: "broker",
+    badges: ["verified"],
+    avatarImage: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=320&q=80",
+    state: "idle",
+    title: "مستشار عقاري",
+    city: "جدة",
+    projectTitle: "لا يوجد",
+    clientName: null,
+    summary: "خبير في السوق الغربي، سبق التعاون معه في 3 مشاريع ناجحة.",
+    relation: {
+      project: null,
+      unit: null,
+      stageLabel: "سابق",
+    },
+  },
+  {
+    id: "broker-layan",
+    name: "ليان القحطاني",
+    avatarLabel: "ل",
+    personType: "broker",
+    avatarImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=320&q=80",
+    state: "qualified",
+    title: "وسيطة مشاريع سكنية",
+    city: "الدمام",
+    projectTitle: "ياسمين لوفتس",
+    clientName: null,
+    summary: "نشطة في المنطقة الشرقية، متخصصة في الحلول التمويلية.",
+    relation: {
+      project: { id: "yasmin-lofts", title: "ياسمين لوفتس", location: "الياسمين، الرياض" },
+      unit: null,
+      stageLabel: "تواصل سابق",
+    },
+  },
+];
+
+export function getPastBrokers() {
+  return CO_BROKERS;
+}
 
 export type CrmMockData = {
   projects: CrmProjectReference[];

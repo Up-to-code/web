@@ -41,6 +41,7 @@ export default function PipelineWorkspace({
   const [activeFilter, setActiveFilter] = useState("all");
   const [draftName, setDraftName] = useState("");
   const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [dragOverStage, setDragOverStage] = useState<PipelineStage | null>(null);
 
   const visibleClients = clients.filter((client) => {
     if (activeFilter === "all") return true;
@@ -115,9 +116,24 @@ export default function PipelineWorkspace({
           {(Object.keys(STAGE_LABELS) as PipelineStage[]).map((stage) => (
             <section
               key={stage}
-              className="space-y-3 border border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] p-4"
-              onDragOver={(event) => event.preventDefault()}
+              className={`space-y-3 border p-4 transition duration-200 ${dragOverStage === stage
+                ? "border-blue-400 bg-blue-50/50 outline-dashed outline-2 outline-offset-[-2px] outline-blue-300"
+                : "border-slate-200 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)]"
+                }`}
+              onDragOver={(event) => {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+              }}
+              onDragEnter={(e) => {
+                e.preventDefault();
+                setDragOverStage(stage);
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                if (dragOverStage === stage) setDragOverStage(null);
+              }}
               onDrop={() => {
+                setDragOverStage(null);
                 if (!draggedId) return;
                 setClients((current) => updateCrmClient(current, draggedId, { stage }));
                 setDraggedId(null);

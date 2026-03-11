@@ -2,6 +2,7 @@ import Link from "next/link";
 import BrandVectorPanel from "../WorkspaceBrand/BrandVectorPanel";
 import type { BrokerPresence } from "./BrokerPresenceChip";
 import BrokerPresenceChip from "./BrokerPresenceChip";
+import { cn } from "@/lib/utils";
 
 type PropertyCardSpec = {
   label: string;
@@ -36,7 +37,7 @@ export default function PropertyCard({
   brokers?: BrokerPresence[];
   footer?: React.ReactNode;
   mediaMode?: "brand" | "photo";
-  density?: "compact" | "detail";
+  density?: "compact" | "detail" | "flexible";
 }) {
   const accent =
     brokers && brokers.some((broker) => broker.state === "client-linked")
@@ -45,44 +46,57 @@ export default function PropertyCard({
         ? "emerald"
         : "slate";
 
+  const widthClass = density === "flexible"
+    ? "w-full min-w-[300px]"
+    : density === "detail"
+      ? "w-full max-w-[340px]"
+      : "w-full max-w-[300px]";
+
   const Content = (
     <article
-      className={`overflow-hidden border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-blue-200 ${density === "detail" ? "w-full max-w-[340px]" : "w-full max-w-[300px]"
-        }`}
+      className={cn(
+        "group relative border border-slate-200 bg-white transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-blue-600 hover:shadow-[0_22px_45px_-15px_rgba(0,41,255,0.08)] active:scale-[0.98] overflow-hidden",
+        widthClass
+      )}
     >
-      <BrandVectorPanel
-        title={title}
-        subtitle={location}
-        accent={accent}
-        imageSrc={image}
-        imageAlt={title}
-        imageMode={mediaMode === "photo" ? "photo" : "vector"}
-      />
+      <div className="overflow-hidden">
+        <div className="transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110">
+          <BrandVectorPanel
+            title={title}
+            subtitle={location}
+            accent={accent}
+            imageSrc={image}
+            imageAlt={title}
+            imageMode={mediaMode === "photo" ? "photo" : "vector"}
+            size={density === "flexible" ? "large" : "default"}
+          />
+        </div>
+      </div>
 
-      <div className="space-y-5 p-5">
-        <div className="flex items-start justify-between gap-4">
-          <p className="text-sm font-medium leading-7 text-slate-600">{summary}</p>
-          <div className="shrink-0 border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-black text-blue-700">{priceLabel}</div>
+      <div className="grid gap-6 p-6">
+        <div className="grid grid-cols-[1fr_auto] items-start gap-4">
+          <p className="text-sm font-medium leading-relaxed text-slate-600 line-clamp-2 text-right">{summary}</p>
+          <div className="shrink-0 border-2 border-blue-600 bg-blue-600 px-3 py-1.5 text-xs font-black text-white shadow-lg shadow-blue-500/20">{priceLabel}</div>
         </div>
 
-        <div className="grid gap-px overflow-hidden border border-slate-200 bg-slate-200 sm:grid-cols-4">
+        <div className="grid grid-cols-4 gap-px bg-slate-100/30 border border-slate-100/50 backdrop-blur-md">
           {specs.map((spec) => (
-            <div key={spec.label} className="bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] px-3 py-3">
-              <div className="text-[11px] font-black tracking-[0.2em] text-slate-400">{spec.label}</div>
-              <div className="mt-1 text-sm font-black text-slate-950">{spec.value}</div>
+            <div key={spec.label} className="bg-white/90 px-2 py-3 text-center transition-colors duration-500 group-hover:bg-white/100">
+              <div className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-blue-600 transition-colors duration-500">{spec.label}</div>
+              <div className="mt-1 text-xs font-black text-slate-950">{spec.value}</div>
             </div>
           ))}
         </div>
 
         {brokers && brokers.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {brokers.map((broker) => (
               <BrokerPresenceChip key={broker.id} broker={broker} />
             ))}
           </div>
         ) : null}
 
-        {footer ? <div>{footer}</div> : null}
+        {footer ? <div className="border-t border-slate-50 pt-4">{footer}</div> : null}
       </div>
     </article>
   );

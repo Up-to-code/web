@@ -2,7 +2,7 @@ import BrandWorkspaceTabs, { type BrandWorkspaceTab } from "../WorkspaceBrand/Br
 
 export type RouteTab = {
   href: string;
-  label: string;
+  label: React.ReactNode;
 };
 
 /**

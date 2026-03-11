@@ -27,9 +27,9 @@ export default function ZoneSidebar({
   return (
     <aside
       data-slot="zone-sidebar"
-      className="flex h-full flex-col border-e border-white/10 bg-[linear-gradient(180deg,#0A2B4C_0%,#091F37_100%)] text-white"
+      className="flex h-full flex-col border-e border-white/5 bg-slate-950 text-white"
     >
-      <div className="border-b border-white/10 px-6 py-8">
+      <div className="border-b border-white/5 px-6 py-8">
         <div className="text-3xl font-black tracking-tighter text-white">{organization.name}</div>
         <div className="mt-6 space-y-2">
           <div className="text-xs font-bold text-slate-300">{organization.sidebarSubtitle}</div>
@@ -38,10 +38,10 @@ export default function ZoneSidebar({
         </div>
       </div>
 
-      <div className="border-b border-white/10 px-4 py-4">
+      <div className="border-b border-white/5 px-4 py-4">
         <Link
           href="/ws"
-          className="flex items-center justify-between border border-white/10 bg-white/5 px-5 py-4 text-[11px] font-black tracking-[0.18em] text-white transition hover:border-blue-500 hover:bg-blue-500"
+          className="flex items-center justify-between border border-white/5 bg-white/5 px-5 py-4 text-[11px] font-black tracking-[0.18em] text-white transition hover:border-blue-600 hover:bg-blue-600 shadow-none"
         >
           <span className="flex items-center gap-3">
             <ArrowLeft className="h-4 w-4" />
@@ -75,8 +75,8 @@ export default function ZoneSidebar({
               className={cn(
                 "flex items-center justify-between border px-5 py-4 text-[11px] font-black tracking-[0.18em] transition-all",
                 isActive
-                  ? "border-blue-500 bg-blue-500 text-white"
-                  : "border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white",
+                  ? "border-blue-600 bg-blue-600 text-white shadow-none"
+                  : "border-transparent text-slate-400 hover:border-white/5 hover:bg-white/5 hover:text-white",
               )}
             >
               <span>{item.label}</span>
@@ -86,12 +86,12 @@ export default function ZoneSidebar({
         })}
       </nav>
 
-      <div className="border-t border-white/10 p-6">
+      <div className="border-t border-white/5 p-6">
         <Link
           href="/ws/me"
-          className="group flex items-center gap-4 border border-transparent p-3 transition hover:border-white/10 hover:bg-white/5"
+          className="group flex items-center gap-4 border border-transparent p-3 transition hover:border-white/5 hover:bg-white/5"
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-blue-400/30 bg-blue-500/15 text-xs font-black uppercase text-blue-100">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-blue-400/30 bg-blue-600/15 text-xs font-black uppercase text-blue-100">
             {(user.name || user.email || "A").slice(0, 1).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">

@@ -18,11 +18,42 @@ export type OfferMarketplaceItem = {
     baths: string;
     area: string;
   };
+  projectRefId?: string | null;
   unit?: UnitReference | null;
   relation?: PersonRelation | null;
   broker?: BrokerPresence | null;
   demandLabel?: string | null;
 };
+
+export const MOCK_PROJECTS = [
+  { 
+    id: "p1", 
+    name: "مالقا ريزيدنس", 
+    type: "شقق فاخرة", 
+    location: "حي الملقا، الرياض", 
+    expectedPrice: "2,500,000",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80",
+    description: "مشروع سكنـي متميز يضـم 42 شـقة فاخرة بتصـاميم عصـرية، مرافـق متكاملـة، إطلالات بانورامية وتشطيبات راقية."
+  },
+  { 
+    id: "p2", 
+    name: "حطين هيلز", 
+    type: "فلل سكنية", 
+    location: "حي حطين، الرياض", 
+    expectedPrice: "4,200,000",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=400&q=80",
+    description: "فلل مستقلة ذات مساحات خضراء شاسعة ومسابح خاصة، تقع في أرقى أحياء الرياض مع خصوصية تامة للساكنين."
+  },
+  { 
+    id: "p3", 
+    name: "النرجس فيو", 
+    type: "تاون هاوس", 
+    location: "حي النرجس، الرياض", 
+    expectedPrice: "1,800,000",
+    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=400&q=80",
+    description: "مجتمع سكني متكامل من وحدات التاون هاوس. مرافق مشتركة تتضمن حدائق ونادي صحي وأمن على مدار الساعة."
+  },
+];
 
 const SHARED_BROKER: BrokerPresence = {
   id: "broker-sara",
@@ -194,20 +225,31 @@ export function getOffersMockData() {
   return OFFER_ITEMS;
 }
 
-/**
- * WHY:   Offer detail pages need one stable lookup into the local mock dataset.
- * WHAT:  Returns one marketplace item by id or null when missing.
- * HOW:   Uses a simple in-memory array match.
- */
 export function getOfferMockById(offerId: string) {
   return OFFER_ITEMS.find((item) => item.id === offerId) ?? null;
 }
 
-/**
- * WHY:   The inbox experience needs thread-specific data rather than the generic marketplace item shape.
- * WHAT:  Returns the offer connection threads used by the offers inbox route.
- * HOW:   Keeps sender/recipient and relation context colocated with the offers zone mock data.
- */
 export function getOfferThreadMockData() {
   return OFFER_THREADS;
+}
+
+/** Add a new offer to the local mock dataset. */
+export function addMockOffer(offer: OfferMarketplaceItem) {
+  OFFER_ITEMS.push(offer);
+}
+
+/** Update an existing offer in the local mock dataset. */
+export function updateMockOffer(offerId: string, updates: Partial<OfferMarketplaceItem>) {
+  const index = OFFER_ITEMS.findIndex((item) => item.id === offerId);
+  if (index !== -1) {
+    OFFER_ITEMS[index] = { ...OFFER_ITEMS[index], ...updates };
+  }
+}
+
+/** Delete an offer from the local mock dataset. */
+export function deleteMockOffer(offerId: string) {
+  const index = OFFER_ITEMS.findIndex((item) => item.id === offerId);
+  if (index !== -1) {
+    OFFER_ITEMS.splice(index, 1);
+  }
 }
