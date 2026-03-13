@@ -21,7 +21,7 @@ export default function AgInventoryLive() {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <div className="h-2 w-2 rounded-none bg-emerald-500 animate-pulse" />
                     <span className="text-[10px] font-black uppercase text-emerald-600 tracking-widest">تحديث لحظي</span>
                 </div>
             </div>
@@ -38,7 +38,7 @@ export default function AgInventoryLive() {
                         <div className="text-[8px] font-bold text-slate-400">{unit.price}</div>
 
                         {unit.status === "available" && (
-                            <div className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                            <div className="absolute top-1 right-1 h-1.5 w-1.5 rounded-none bg-emerald-500" />
                         )}
 
                         {/* Hover Overlay */}

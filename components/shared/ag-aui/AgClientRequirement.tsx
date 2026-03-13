@@ -7,7 +7,7 @@ export default function AgClientRequirement() {
                 <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center bg-blue-600 text-white relative">
                         <Target className="h-6 w-6" />
-                        <div className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 border-2 border-white rounded-full" />
+                        <div className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 border-2 border-white rounded-none" />
                     </div>
                     <div>
                         <div className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">طلب عميل نشط</div>

@@ -312,7 +312,7 @@ export default function AgBrokerAssignmentModal({
             إغلاق
           </button>
           <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
-            <div className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <div className="h-1.5 w-1.5 rounded-none bg-blue-500 animate-pulse" />
             سيُحدَّث المشروع فور الإضافة
           </div>
         </div>

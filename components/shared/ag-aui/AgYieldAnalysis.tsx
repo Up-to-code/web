@@ -30,7 +30,7 @@ export default function AgYieldAnalysis() {
                                 { label: "عوائد تشغيلية", value: "20%", color: "bg-slate-900" }
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-4">
-                                    <div className={`h-2 w-2 rounded-full ${item.color}`} />
+                                    <div className={`h-2 w-2 rounded-none ${item.color}`} />
                                     <span className="text-[10px] font-bold text-slate-600 flex-1">{item.label}</span>
                                     <span className="text-[10px] font-black text-slate-900">{item.value}</span>
                                 </div>

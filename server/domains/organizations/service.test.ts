@@ -11,8 +11,8 @@ describe("organizations domain service", () => {
   it("validates create payloads before calling the repository", async () => {
     const requireSession = vi.fn();
     const organizationsRepository = {
-      listForUser: vi.fn(),
-      createForUser: vi.fn(),
+      listForCurrentUser: vi.fn(),
+      createForCurrentUser: vi.fn(),
       listTeamMembers: vi.fn(),
       listTeamInvites: vi.fn(),
       createTeamInvite: vi.fn(),
@@ -28,7 +28,7 @@ describe("organizations domain service", () => {
     ).rejects.toBeInstanceOf(DomainError);
 
     expect(requireSession).not.toHaveBeenCalled();
-    expect(organizationsRepository.createForUser).not.toHaveBeenCalled();
+    expect(organizationsRepository.createForCurrentUser).not.toHaveBeenCalled();
   });
 
   it("delegates organization creation to the repository for non-admin sessions", async () => {
@@ -42,8 +42,8 @@ describe("organizations domain service", () => {
       profile: null,
     }));
     const organizationsRepository = {
-      listForUser: vi.fn(),
-      createForUser: vi.fn(async () => ({
+      listForCurrentUser: vi.fn(),
+      createForCurrentUser: vi.fn(async () => ({
         id: "broker-1",
         type: "broker" as const,
         name: "Fresh Start Realty",
@@ -63,16 +63,51 @@ describe("organizations domain service", () => {
       { requireSession, organizationsRepository },
     );
 
-    expect(organizationsRepository.createForUser).toHaveBeenCalledWith({
-      authUserId: "user-1",
-      email: undefined,
-      displayName: undefined,
-      input: {
-        name: "Fresh Start Realty",
-        type: "broker",
-      },
+    expect(organizationsRepository.createForCurrentUser).toHaveBeenCalledWith("token-1", {
+      name: "Fresh Start Realty",
+      type: "broker",
     });
     expect(organization.slug).toBe("fresh-start-realty");
+  });
+
+  it("infers the organization type when the UI does not send one", async () => {
+    const requireSession = vi.fn(async () => ({
+      token: "token-2",
+      context: {
+        userId: "user-2",
+        role: "user",
+        isActive: true,
+      },
+      profile: {
+        requestedRole: "developer",
+      },
+    }));
+    const organizationsRepository = {
+      listForCurrentUser: vi.fn(),
+      createForCurrentUser: vi.fn(async () => ({
+        id: "red-1",
+        type: "red" as const,
+        name: "Alpha Developments",
+        slug: "alpha-developments",
+        status: "active" as const,
+        isVerified: false,
+      })),
+      listTeamMembers: vi.fn(),
+      listTeamInvites: vi.fn(),
+      createTeamInvite: vi.fn(),
+      cancelTeamInvite: vi.fn(),
+      acceptTeamInvite: vi.fn(),
+    };
+
+    await createOrganizationForCurrentUser(
+      { name: "Alpha Developments" },
+      { requireSession, organizationsRepository },
+    );
+
+    expect(organizationsRepository.createForCurrentUser).toHaveBeenCalledWith("token-2", {
+      name: "Alpha Developments",
+      type: "red",
+    });
   });
 
   it("lists organizations through the repository", async () => {
@@ -85,7 +120,7 @@ describe("organizations domain service", () => {
       profile: null,
     }));
     const organizationsRepository = {
-      listForUser: vi.fn(async () => [
+      listForCurrentUser: vi.fn(async () => [
         {
           id: "broker-1",
           type: "broker" as const,
@@ -95,7 +130,7 @@ describe("organizations domain service", () => {
           isVerified: false,
         },
       ]),
-      createForUser: vi.fn(),
+      createForCurrentUser: vi.fn(),
       listTeamMembers: vi.fn(),
       listTeamInvites: vi.fn(),
       createTeamInvite: vi.fn(),
@@ -109,6 +144,6 @@ describe("organizations domain service", () => {
     });
 
     expect(organizations).toHaveLength(1);
-    expect(organizationsRepository.listForUser).toHaveBeenCalledWith("user-1");
+    expect(organizationsRepository.listForCurrentUser).toHaveBeenCalledWith("token-1");
   });
 });

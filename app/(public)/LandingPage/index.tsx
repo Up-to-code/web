@@ -270,7 +270,7 @@ export default function LandingPage() {
           <ActionRow className="flex flex-col justify-center gap-8 pt-8 sm:flex-row">
             <a
               href="/signin"
-              className="inline-flex min-w-[180px] items-center justify-center border border-white bg-white px-10 py-5 text-base font-black tracking-wide text-blue-700 shadow-[0_22px_44px_rgba(15,23,42,0.14)] transition-colors hover:bg-slate-50"
+              className="inline-flex min-w-[180px] items-center justify-center border border-white bg-white px-10 py-5 text-base font-black tracking-wide text-blue-700 shadow-none transition-colors hover:bg-slate-50"
             >
               ابدأ الآن مجاناً
             </a>

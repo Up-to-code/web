@@ -45,7 +45,7 @@ export default function AgLegalSearch() {
                                     <div className="text-xs font-black text-slate-900">{doc.title}</div>
                                     <div className="flex items-center gap-2 mt-1">
                                         <span className="text-[9px] font-black uppercase text-slate-400">{doc.type}</span>
-                                        <div className="w-1 h-1 rounded-full bg-slate-200" />
+                                        <div className="w-1 h-1 rounded-none bg-slate-200" />
                                         <span className="text-[9px] font-black uppercase text-slate-400">{doc.date}</span>
                                     </div>
                                 </div>

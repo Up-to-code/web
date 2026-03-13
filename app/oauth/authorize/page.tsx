@@ -34,6 +34,11 @@ export default async function OAuthAuthorizePage({ searchParams }: AuthorizePage
 
   const preview = await getAuthorizationPromptForCurrentUser(flow);
 
+  if (!preview.requiresConsent && preview.existingAuthorization) {
+    const result = await approveAuthorizationForCurrentUser(flow);
+    redirect(result.redirectUrl);
+  }
+
   async function approveAuthorization(formData: FormData) {
     "use server";
 

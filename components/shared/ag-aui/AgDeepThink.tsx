@@ -13,7 +13,7 @@ export default function AgDeepThink() {
                     <div className="inline-block w-full p-8 bg-slate-950 border-2 border-slate-800 text-right font-mono">
                         <div className="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
                             <div className="flex items-center gap-3">
-                                <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse shrink-0" />
+                                <div className="h-2 w-2 rounded-none bg-blue-500 animate-pulse shrink-0" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">الاستنتاج الداخلي للذكاء الاصطناعي</span>
                             </div>
                             <Activity className="h-4 w-4 text-slate-700" />

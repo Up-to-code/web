@@ -1,4 +1,4 @@
-import type { AgUiActionDefinition, AgUiDraftState, AgUiExecutionState } from "@/app/(wso)/ws/_lib/entities";
+import type { AgUiActionDefinition, AgUiDraftState, AgUiExecutionState } from "@/app/(ws)/ws/_lib/entities";
 
 export type AgUiComponentId =
   | "project_create_draft"

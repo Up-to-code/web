@@ -8,7 +8,7 @@ export default function AgVoiceVisualizer() {
             </div>
 
             <div className="relative">
-                <div className="absolute inset-0 animate-ping   rounded-full opacity-20" />
+                <div className="absolute inset-0 animate-ping   rounded-none opacity-20" />
                 <div className="relative flex h-24 w-24 items-center justify-center bg-blue-600 text-white z-10 transition-transform hover:scale-105 cursor-pointer">
                     <Mic className="h-10 w-10 animate-pulse" />
                 </div>

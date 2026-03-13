@@ -40,7 +40,7 @@ export type CrmRepository = {
   addDocument(args: { lastUpdatedBy: string } & AddDealDocumentInput): Promise<void>;
 };
 
-function mapDealIds<T extends { id?: string; REDId?: string; brokerId?: string; propertyId?: string; offerId?: string; documentIds?: string[] }>(
+function mapDealIds<T extends { id?: string; REDId?: string; brokerId?: string; propertyId?: string; offerId?: string }>(
   deal: T,
 ) {
   return {
@@ -109,10 +109,10 @@ export const convexCrmRepository: CrmRepository = {
     } as never);
   },
 
-  async addDocument({ lastUpdatedBy, dealId, storageId }) {
+  async addDocument({ lastUpdatedBy, dealId, document }) {
     await fetchMutation(crmApi.addDealDocument as never, {
       dealId: dealId as never,
-      storageId: storageId as never,
+      document: document as never,
       lastUpdatedBy,
     } as never);
   },

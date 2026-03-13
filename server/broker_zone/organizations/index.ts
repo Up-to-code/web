@@ -44,7 +44,7 @@ export async function listBrokerOrganizations(
   dependencies: BrokerOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationSummary[]> {
   const { session } = await getBrokerOwnerContext(dependencies);
-  return dependencies.repository.listForUser(session.context.userId);
+  return dependencies.repository.listForCurrentUser(session.token);
 }
 
 /**
@@ -57,26 +57,21 @@ export async function createBrokerOrganization(
   dependencies: BrokerOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationSummary> {
   const session = await dependencies.requireSession();
-  return dependencies.repository.createForUser({
-    authUserId: session.context.userId,
-    email: session.context.email,
-    displayName: session.context.name,
-    input: { name: input.name, type: "broker" },
-  });
+  return dependencies.repository.createForCurrentUser(session.token, { name: input.name, type: "broker" });
 }
 
 export async function listBrokerTeamMembers(
   dependencies: BrokerOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationTeamMember[]> {
-  const { ownerType, ownerId } = await getBrokerOwnerContext(dependencies);
-  return dependencies.repository.listTeamMembers({ ownerType, ownerId });
+  const { session } = await getBrokerOwnerContext(dependencies);
+  return dependencies.repository.listCurrentTeamMembers(session.token);
 }
 
 export async function listBrokerTeamInvites(
   dependencies: BrokerOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationInviteSummary[]> {
-  const { ownerType, ownerId } = await getBrokerOwnerContext(dependencies);
-  return dependencies.repository.listTeamInvites({ ownerType, ownerId });
+  const { session } = await getBrokerOwnerContext(dependencies);
+  return dependencies.repository.listCurrentTeamInvites(session.token);
 }
 
 export async function createBrokerTeamInvite(
@@ -91,25 +86,16 @@ export async function createBrokerTeamInvite(
       status: 400,
     });
   }
-  const { session, ownerType, ownerId } = await getBrokerOwnerContext(dependencies);
-  return dependencies.repository.createTeamInvite({
-    ownerType,
-    ownerId,
-    authUserId: session.context.userId,
-    input: parsed.data,
-  });
+  const { session } = await getBrokerOwnerContext(dependencies);
+  return dependencies.repository.createCurrentTeamInvite(session.token, parsed.data);
 }
 
 export async function cancelBrokerTeamInvite(
   input: { inviteId: string },
   dependencies: BrokerOrganizationsDependencies = defaultDependencies,
 ): Promise<void> {
-  const { ownerType, ownerId } = await getBrokerOwnerContext(dependencies);
-  await dependencies.repository.cancelTeamInvite({
-    ownerType,
-    ownerId,
-    inviteId: input.inviteId,
-  });
+  const { session } = await getBrokerOwnerContext(dependencies);
+  await dependencies.repository.cancelCurrentTeamInvite(session.token, input.inviteId);
 }
 
 export async function acceptBrokerTeamInvite(
@@ -117,8 +103,5 @@ export async function acceptBrokerTeamInvite(
   dependencies: BrokerOrganizationsDependencies = defaultDependencies,
 ): Promise<void> {
   const session = await dependencies.requireSession();
-  await dependencies.repository.acceptTeamInvite({
-    authUserId: session.context.userId,
-    token: input.token,
-  });
+  await dependencies.repository.acceptCurrentTeamInvite(session.token, input.token);
 }

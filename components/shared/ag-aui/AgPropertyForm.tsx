@@ -1,6 +1,6 @@
 "use client";
 
-import { 
+import {
   Building2, 
   MapPin, 
   Check, 
@@ -16,11 +16,13 @@ import {
   Trash2,
   ChevronLeft
 } from "lucide-react";
-import { useState, useMemo } from "react";
-import { getPastBrokers } from "../../../app/(wso)/ws/(zones)/crm/mockData";
+import { useMemo, useRef, useState, type ChangeEvent } from "react";
 import AgRichTextEditor from "./AgRichTextEditor";
 import { cn } from "@/lib/utils";
-import ZonePageIntro from "../../../app/(wso)/ws/_components/ZoneShell/ZonePageIntro";
+import ZonePageIntro from "../../../app/(ws)/ws/_components/ZoneShell/ZonePageIntro";
+import { useUploadThing } from "@/lib/uploadthing";
+import type { UploadedFileReference } from "@/server/contracts/files";
+import type { BrokerPresence } from "../../../app/(ws)/ws/_components/Visuals/BrokerPresenceChip";
 
 export type ProjectFormData = {
   name: string;
@@ -31,17 +33,18 @@ export type ProjectFormData = {
   baths: string;
   area: string;
   status: string;
-  images: string[];
+  images: UploadedFileReference[];
   video: string | null;
   brokerId: string | null;
 };
 
 type AgPropertyFormProps = {
   initialData?: Partial<ProjectFormData>;
+  brokers?: BrokerPresence[];
   title?: string;
   description?: string;
   submitLabel?: string;
-  onSave?: (data: ProjectFormData) => void;
+  onSave?: (data: ProjectFormData) => Promise<void> | void;
   onCancel?: () => void;
   onDelete?: () => void;
 };
@@ -53,6 +56,7 @@ type AgPropertyFormProps = {
  */
 export default function AgPropertyForm({
   initialData,
+  brokers = [],
   title = "مسؤولية الاطلاع",
   description = "تكامل البيانات وإدارة الأصول العقارية المركزية. مراجعة، تدقيق، ونشر.",
   submitLabel = "تأكيد ونشر المشروع",
@@ -60,11 +64,14 @@ export default function AgPropertyForm({
   onCancel,
   onDelete,
 }: AgPropertyFormProps) {
-    const brokers = getPastBrokers();
     const [selectedBrokerId, setSelectedBrokerId] = useState<string | null>(initialData?.brokerId ?? null);
     const [brokerSearch, setBrokerSearch] = useState("");
     const [isBrokerDropdownOpen, setIsBrokerDropdownOpen] = useState(false);
     const [showSafetyConfirm, setShowSafetyConfirm] = useState(false);
+    const [savePending, setSavePending] = useState(false);
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const { startUpload, isUploading } = useUploadThing("propertyMedia");
 
     const [formState, setFormState] = useState({
         name: initialData?.name ?? "",
@@ -92,28 +99,43 @@ export default function AgPropertyForm({
         brokers.find(b => b.id === selectedBrokerId), 
     [selectedBrokerId, brokers]);
 
-    const addImage = () => {
-        const mockImages = [
-            "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-            "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1200&q=80"
-        ];
-        const nextImg = mockImages[formState.images.length % mockImages.length];
-        setFormState(prev => ({ ...prev, images: [...prev.images, nextImg] }));
-    };
-
     const removeImage = (index: number) => {
         setFormState(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }));
     };
 
-    const handleConfirm = () => {
-      const payload: ProjectFormData = { ...formState, brokerId: selectedBrokerId };
-      if (onSave) {
-        onSave(payload);
-      } else {
-        console.log("CONFIRMED:", payload);
+    const handleImageSelection = async (event: ChangeEvent<HTMLInputElement>) => {
+      const files = Array.from(event.target.files ?? []);
+      if (files.length === 0) {
+        return;
       }
-      setShowSafetyConfirm(false);
+
+      setUploadError(null);
+
+      try {
+        const uploaded = await startUpload(files);
+        const nextImages =
+          uploaded?.map((file) => file.serverData as UploadedFileReference) ?? [];
+        setFormState((prev) => ({ ...prev, images: [...prev.images, ...nextImages] }));
+      } catch (error) {
+        setUploadError(error instanceof Error ? error.message : "تعذر رفع الصور حالياً.");
+      } finally {
+        event.target.value = "";
+      }
+    };
+
+    const handleConfirm = async () => {
+      const payload: ProjectFormData = { ...formState, brokerId: selectedBrokerId };
+      setSavePending(true);
+      try {
+        if (onSave) {
+          await onSave(payload);
+        } else {
+          console.log("CONFIRMED:", payload);
+        }
+        setShowSafetyConfirm(false);
+      } finally {
+        setSavePending(false);
+      }
     };
 
     return (
@@ -136,9 +158,10 @@ export default function AgPropertyForm({
                         <div className="grid gap-3">
                             <button 
                                 onClick={handleConfirm}
+                                disabled={savePending}
                                 className="border-2 border-blue-600 bg-blue-600 py-4 text-sm font-black tracking-[0.2em] text-white hover:bg-slate-950 hover:border-slate-950 transition-colors"
                             >
-                                اعتماد ونشر
+                                {savePending ? "جارٍ الحفظ..." : "اعتماد ونشر"}
                             </button>
                             <button 
                                 onClick={() => setShowSafetyConfirm(false)}
@@ -294,7 +317,7 @@ export default function AgPropertyForm({
                                     {isBrokerDropdownOpen && (
                                         <>
                                             <div className="fixed inset-0 z-10" onClick={() => setIsBrokerDropdownOpen(false)} />
-                                            <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-[300px] overflow-auto border-2 border-slate-950 bg-white shadow-xl animate-in slide-in-from-top-2 duration-200">
+                                            <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-[300px] overflow-auto border-2 border-slate-950 bg-white shadow-none animate-in slide-in-from-top-2 duration-200">
                                                 {filteredBrokers.length > 0 ? (
                                                     <div className="grid divide-y divide-slate-100">
                                                         {filteredBrokers.map(broker => (
@@ -347,19 +370,37 @@ export default function AgPropertyForm({
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
+                            <input
+                                ref={inputRef}
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                className="hidden"
+                                onChange={handleImageSelection}
+                            />
                             {/* Upload Area */}
                             <div 
                                 className="col-span-2 border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-600 transition-all aspect-video group cursor-pointer flex flex-col items-center justify-center text-center gap-3 p-6"
-                                onClick={addImage}
+                                onClick={() => inputRef.current?.click()}
                             >
                                 <Upload className="h-6 w-6 text-slate-300 group-hover:text-blue-600 transition-colors duration-300" />
-                                <div className="text-sm font-black text-slate-900">إضافة صور</div>
+                                <div className="text-sm font-black text-slate-900">
+                                  {isUploading ? "جارٍ رفع الصور..." : "إضافة صور"}
+                                </div>
+                                <div className="text-[10px] font-bold tracking-widest text-slate-400">
+                                  UploadThing
+                                </div>
                             </div>
+                            {uploadError ? (
+                              <div className="col-span-2 border border-red-200 bg-red-50 px-4 py-3 text-right text-xs font-bold text-red-700">
+                                {uploadError}
+                              </div>
+                            ) : null}
 
                             {/* Image Grid */}
                             {formState.images.map((img, idx) => (
                                 <div key={idx} className="relative aspect-square border-2 border-slate-100 bg-white overflow-hidden group">
-                                    <img src={img} alt="" className="h-full w-full object-cover transition duration-700 hover:scale-105" />
+                                    <img src={img.url} alt={img.name} className="h-full w-full object-cover transition duration-700 hover:scale-105" />
                                     <button 
                                         onClick={(e) => { e.stopPropagation(); removeImage(idx); }}
                                         className="absolute right-1 top-1 h-6 w-6 bg-white/90 text-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow hover:bg-red-600 hover:text-white"
@@ -462,9 +503,10 @@ export default function AgPropertyForm({
                         </div>
                         <button 
                             onClick={() => setShowSafetyConfirm(true)}
+                            disabled={savePending}
                             className="w-full bg-blue-600 py-5 text-sm font-black tracking-[0.2em] text-white hover:bg-slate-950 transition-colors flex items-center justify-center"
                         >
-                            {submitLabel}
+                            {savePending ? "جارٍ الحفظ..." : submitLabel}
                         </button>
                     </div>
                 </div>

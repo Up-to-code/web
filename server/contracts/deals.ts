@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { uploadedFileReferenceSchema, type UploadedFileReference } from "@/server/contracts/files";
 
 export const dealStageSchema = z.enum(["new", "contacted", "negotiation", "won", "lost"]);
 
@@ -29,7 +30,7 @@ export const updateDealNotesInputSchema = z.object({
 
 export const addDealDocumentInputSchema = z.object({
   dealId: z.string(),
-  storageId: z.string(),
+  document: uploadedFileReferenceSchema,
 });
 
 export const propertyDealsInputSchema = z.object({
@@ -58,7 +59,7 @@ export type DealSummary = {
   lastUpdatedBy?: string;
   brokerName?: string | null;
   redName?: string | null;
-  documentIds?: string[];
+  documents?: UploadedFileReference[];
 };
 
 export type DealDetail = DealSummary;

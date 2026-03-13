@@ -34,9 +34,9 @@ export default function AgFileCard({
                     </div>
                     <div className="mt-1 flex items-center gap-4 text-[10px] font-bold text-slate-400">
                         <span>{fileType}</span>
-                        <span className="h-1 w-1 rounded-full bg-slate-200" />
+                        <span className="h-1 w-1 rounded-none bg-slate-200" />
                         <span>{fileSize}</span>
-                        <span className="h-1 w-1 rounded-full bg-slate-200" />
+                        <span className="h-1 w-1 rounded-none bg-slate-200" />
                         <div className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {timestamp}

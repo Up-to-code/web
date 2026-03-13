@@ -13,7 +13,7 @@ export default function Footer() {
                     {/* Brand & Tagline */}
                     <div className="space-y-8 max-w-sm">
                         <div className="flex items-center gap-4">
-                            <Link href="/" className="inline-flex items-center justify-center rounded-3xl border border-slate-700 bg-slate-950 p-3">
+                            <Link href="/" className="inline-flex items-center justify-center rounded-none border border-slate-700 bg-slate-950 p-3">
                                 <Image
                                     src="/brand-mark.svg"
                                     alt="عنان"

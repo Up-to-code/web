@@ -53,6 +53,7 @@ export async function getOptionalSessionContext(
       email: user.email,
       name: user.name,
       image: user.image,
+      username: profile?.username,
       role: profile?.role,
       brokerId: profile?.brokerId,
       redId: profile?.REDId,

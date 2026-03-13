@@ -5,7 +5,7 @@ export default function AgCallPortal() {
         <div className="w-full bg-white overflow-hidden">
             <div className="bg-slate-950 p-8 text-white flex flex-col items-center text-center gap-6">
                 <div className="relative">
-                    <div className="absolute inset-0 animate-ping   rounded-full opacity-20" />
+                    <div className="absolute inset-0 animate-ping   rounded-none opacity-20" />
                     <div className="relative h-20 w-20 bg-blue-600 flex items-center justify-center z-10">
                         <Phone className="h-8 w-8 animate-pulse" />
                     </div>
