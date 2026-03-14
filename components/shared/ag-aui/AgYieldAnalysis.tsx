@@ -1,5 +1,10 @@
 import { TrendingUp, PieChart, ArrowUpRight, ShieldCheck, Wallet, Landmark } from "lucide-react";
 
+/**
+ * WHY:   Developer dashboards need a fast, executive summary view of investment yield signals.
+ * WHAT:  Renders a mock yield analysis panel with IRR headline, distribution breakdown, and CTA.
+ * HOW:   Uses static placeholder values and layout-only composition; no calculations beyond display formatting.
+ */
 export default function AgYieldAnalysis() {
     return (
         <div className="w-full bg-white overflow-hidden group">
@@ -53,7 +58,7 @@ export default function AgYieldAnalysis() {
                         <span className="text-[10px] font-black uppercase tracking-widest">ضمانات الاستثمار أنان</span>
                     </div>
                     <p className="text-xs font-bold text-slate-600 leading-relaxed italic">
-                        "يتم احتساب العوائد بناءً على بيانات السوق اللحظية ونسب الإشغال الفعلية لحي الملقا، مع هامش خطأ لا يتجاوز 2.5%."
+                        &quot;يتم احتساب العوائد بناءً على بيانات السوق اللحظية ونسب الإشغال الفعلية لحي الملقا، مع هامش خطأ لا يتجاوز 2.5%.&quot;
                     </p>
                 </div>
             </div>

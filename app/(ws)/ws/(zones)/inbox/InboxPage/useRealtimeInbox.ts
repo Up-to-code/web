@@ -11,8 +11,8 @@ import type {
   UserConversationTarget,
 } from "@/server/contracts/inbox";
 
-const inboxApi = (api as Record<string, any>)["shared_logic/inbox"];
-const notificationsApi = (api as Record<string, any>)["shared_logic/notifications"];
+const inboxApi = api.shared_logic.inbox;
+const notificationsApi = api.shared_logic.notifications;
 
 type UseRealtimeInboxArgs = {
   currentUserId: string;

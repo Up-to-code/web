@@ -37,7 +37,7 @@ export default function OfferThreadCard({
           </div>
           <h4 className="text-sm font-bold text-slate-800 mb-2 truncate">{thread.subject}</h4>
           <p className="text-sm leading-6 text-slate-500 line-clamp-2">
-            "{thread.summary}"
+            &quot;{thread.summary}&quot;
           </p>
         </div>
       </div>

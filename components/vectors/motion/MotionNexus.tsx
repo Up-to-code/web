@@ -2,6 +2,16 @@
 
 import { motion } from "framer-motion";
 
+function stableRand01(seed: number) {
+    const x = Math.sin(seed * 9999) * 10000;
+    return x - Math.floor(x);
+}
+
+/**
+ * WHY:   The landing visuals need a stable, deterministic motion motif that feels "alive" without jitter.
+ * WHAT:  Renders a radial nexus SVG with repeating line pulses and node highlights.
+ * HOW:   Uses deterministic per-index delays (pure) to avoid calling `Math.random()` during render.
+ */
 export default function MotionNexus() {
     // Generate 24 radiating lines
     const lineCount = 24;
@@ -10,7 +20,7 @@ export default function MotionNexus() {
         const radian = (angle * Math.PI) / 180;
         const x2 = Math.cos(radian) * 280;
         const y2 = Math.sin(radian) * 280;
-        return { x2, y2, delay: Math.random() * 2 };
+        return { x2, y2, delay: stableRand01(i + 1) * 2 };
     });
 
     return (

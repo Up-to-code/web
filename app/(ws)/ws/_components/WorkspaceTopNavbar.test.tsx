@@ -24,7 +24,7 @@ describe("WorkspaceTopNavbar", () => {
           name: "شركة الواحة",
           navbarSubtitle: "مساحة المطور",
         }}
-        visibleZoneKeys={["inbox", "notifications", "projects"] as any}
+        visibleZoneKeys={["inbox", "projects"]}
         initialSignalCounts={{ notificationCount: 0, inboxCount: 0 }}
       />,
     );

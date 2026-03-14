@@ -1,8 +1,9 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
+import type { MarketSnapshot } from "@/server/contracts/market";
 
 const { getWorkspaceMarketSnapshot } = vi.hoisted(() => ({
-  getWorkspaceMarketSnapshot: vi.fn(async (): Promise<any> => ({
+  getWorkspaceMarketSnapshot: vi.fn(async (): Promise<MarketSnapshot> => ({
     filters: { city: "الرياض", area: "الملقا", query: "مواقف", windowDays: 90 as const },
     availableCities: ["الرياض", "جدة"],
     availableAreas: ["الملقا", "حطين"],
@@ -60,20 +61,20 @@ const { getWorkspaceMarketSnapshot } = vi.hoisted(() => ({
       areaDemand: [{ label: "الملقا", demandSignals: 8, researchRuns: 1, inventoryCount: 2 }],
       keywordCounts: [{ label: "مواقف", count: 4 }],
     },
-    latestUpdate: {
-      query: "أفضل شقق في الملقا",
-      createdAt: new Date("2026-03-10T09:30:00Z").getTime(),
-      status: "completed" as const,
-      sourceCount: 2,
+      latestUpdate: {
+        query: "أفضل شقق في الملقا",
+        createdAt: new Date("2026-03-10T09:30:00Z").getTime(),
+        status: "completed" as const,
+        sourceCount: 2,
       topFindings: [
         {
           title: "شقة 3 غرف في الملقا",
           locationHint: "الرياض",
           area: "الملقا",
         },
-      ],
-    },
-  })),
+        ],
+      },
+  } satisfies MarketSnapshot)),
 }));
 
 vi.mock("@/server/market", () => ({
@@ -97,7 +98,7 @@ describe("/ws/market page", () => {
   });
 
   it("renders the honest empty state when no usable data exists", async () => {
-    getWorkspaceMarketSnapshot.mockResolvedValueOnce({
+    const emptySnapshot = {
       filters: { city: "", area: "", query: "", windowDays: 90 as const },
       availableCities: [],
       availableAreas: [],
@@ -116,7 +117,9 @@ describe("/ws/market page", () => {
       opportunities: [],
       chartSeries: { cityDemand: [], areaDemand: [], keywordCounts: [] },
       latestUpdate: null,
-    } as any);
+    } satisfies MarketSnapshot;
+
+    getWorkspaceMarketSnapshot.mockResolvedValueOnce(emptySnapshot);
 
     const element = await WorkspaceMarketRoute({
       searchParams: Promise.resolve({}),

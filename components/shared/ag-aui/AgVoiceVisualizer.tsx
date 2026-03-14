@@ -1,5 +1,10 @@
 import { Mic, X, Waves } from "lucide-react";
 
+/**
+ * WHY:   Voice input is a core multi-channel affordance for Arabic-first property search.
+ * WHAT:  Renders a mock voice listening UI with animated bars and an example utterance.
+ * HOW:   Uses static animation styles only; does not start audio capture or attach event handlers.
+ */
 export default function AgVoiceVisualizer() {
     return (
         <div className="w-full bg-white p-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
@@ -18,7 +23,7 @@ export default function AgVoiceVisualizer() {
                 <div className="text-[10px] font-black uppercase tracking-[0.5em] text-blue-600">جاري الاستماع...</div>
                 <h3 className="text-2xl font-black text-slate-900 tracking-tight">تحدث الآن للبحث عن عقارات</h3>
                 <p className="text-sm font-bold text-slate-400 max-w-xs mx-auto leading-relaxed">
-                    يمكنك قول: "ابحث لي عن فلل في الياسمين بسعر أقل من 5 مليون ريال"
+                    يمكنك قول: &quot;ابحث لي عن فلل في الياسمين بسعر أقل من 5 مليون ريال&quot;
                 </p>
             </div>
 
