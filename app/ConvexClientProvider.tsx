@@ -15,7 +15,7 @@ export default function ConvexClientProvider({
   children: React.ReactNode;
 }) {
   const [client] = useState(
-    () => new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL),
+    () => new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL as string),
   );
 
   return <ConvexAuthNextjsProvider client={client}>{children}</ConvexAuthNextjsProvider>;

@@ -31,7 +31,10 @@ export default function ZoneShell({
       </div>
 
       <div className="relative flex min-w-0 flex-1 flex-col bg-transparent lg:max-h-svh lg:overflow-hidden">
-        <WorkspaceTopNavbar user={user} organization={organization} />
+        <WorkspaceTopNavbar 
+          organization={organization} 
+          visibleZoneKeys={[zone.key]} 
+        />
         <main className="min-w-0 flex-1 bg-transparent motion-safe:animate-zone-page-enter lg:h-svh lg:overflow-auto">
           {children}
         </main>

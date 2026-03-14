@@ -11,6 +11,8 @@ import type {
   UserConversationTarget,
 } from "@/server/contracts/inbox";
 
+import { Id } from "@convex/dataModel";
+
 const inboxApi = api.shared_logic.inbox;
 const notificationsApi = api.shared_logic.notifications;
 
@@ -45,7 +47,7 @@ function buildOptimisticMessage(args: {
   recipientUserId: string;
 }): ConversationMessage {
   return {
-    id: `optimistic-${args.clientRequestId}`,
+    id: `optimistic-${args.clientRequestId}` as any,
     senderUserId: args.currentUserId,
     recipientUserId: args.recipientUserId,
     type: "text",
@@ -100,7 +102,7 @@ export function useRealtimeInbox({
   const liveConversations = useQuery(inboxApi.listConversations, {});
   const liveConversation = useQuery(
     inboxApi.getConversation,
-    activeConversationId ? { conversationId: activeConversationId } : "skip",
+    activeConversationId ? { conversationId: activeConversationId as Id<"inboxConversations"> } : "skip",
   );
   const liveSearchResults = useQuery(
     inboxApi.searchConversationTargets,
@@ -124,6 +126,10 @@ export function useRealtimeInbox({
           return;
         }
 
+        if (!conversation.otherUser) {
+          return;
+        }
+
         const optimisticMessage = buildOptimisticMessage({
           body: args.body,
           clientRequestId: args.clientRequestId ?? `client-${Date.now()}`,
@@ -131,19 +137,20 @@ export function useRealtimeInbox({
           recipientUserId: conversation.otherUser.id,
         });
         const updatedAt = optimisticMessage.createdAt;
+        const messageSummary = buildSummaryPreview(optimisticMessage) as any;
         const optimisticConversation = {
           ...conversation,
           updatedAt,
           unreadCount: 0,
-          lastMessage: buildSummaryPreview(optimisticMessage),
+          lastMessage: messageSummary,
           lastMessagePreview: optimisticMessage.body,
-          messages: [...conversation.messages, optimisticMessage],
-        };
+          messages: [...(conversation.messages || []), optimisticMessage] as any,
+        } as any;
 
         localStore.setQuery(
           inboxApi.getConversation,
           { conversationId: args.conversationId },
-          optimisticConversation,
+          optimisticConversation as any,
         );
 
         const conversations = localStore.getQuery(inboxApi.listConversations, {});
@@ -152,19 +159,19 @@ export function useRealtimeInbox({
         }
 
         const summary: ConversationSummary = {
-          id: optimisticConversation.id,
-          directKey: optimisticConversation.directKey,
-          otherUser: optimisticConversation.otherUser,
+          id: optimisticConversation.id as any,
+          directKey: optimisticConversation.directKey || "",
+          otherUser: optimisticConversation.otherUser as any,
           unreadCount: 0,
           updatedAt,
-          lastMessage: buildSummaryPreview(optimisticMessage),
+          lastMessage: buildSummaryPreview(optimisticMessage) as any,
           lastMessagePreview: optimisticMessage.body,
         };
 
         localStore.setQuery(
           inboxApi.listConversations,
           {},
-          upsertConversationSummary(conversations, summary),
+          upsertConversationSummary(conversations as any, summary as any) as any,
         );
       }),
     [baseSendConversationMessage, currentUserId],
@@ -208,7 +215,7 @@ export function useRealtimeInbox({
 
   useEffect(() => {
     if (!hasConversationRoute && conversation && !activeConversationId) {
-      setActiveConversationId(conversation.id);
+      setActiveConversationId(conversation.id as any);
     }
   }, [activeConversationId, conversation, hasConversationRoute]);
 
@@ -243,7 +250,7 @@ export function useRealtimeInbox({
         return;
       }
 
-      void markConversationRead({ conversationId: activeConversationId });
+      void markConversationRead({ conversationId: activeConversationId as any });
     };
 
     markActiveConversationRead();
@@ -261,7 +268,7 @@ export function useRealtimeInbox({
   );
 
   const handleSelectConversation = (conversationId: string) => {
-    setActiveConversationId(conversationId);
+    setActiveConversationId(conversationId as any);
     router.push(`/ws/inbox/${conversationId}`);
   };
 
@@ -269,7 +276,7 @@ export function useRealtimeInbox({
     setSendError(null);
     const conversationId = await resolveConversation({ targetUserId });
     setSearch("");
-    setActiveConversationId(conversationId);
+    setActiveConversationId(conversationId as any);
     router.push(`/ws/inbox/${conversationId}`);
   };
 
@@ -287,7 +294,7 @@ export function useRealtimeInbox({
     try {
       setIsSending(true);
       await sendConversationMessage({
-        conversationId: activeConversationId,
+        conversationId: activeConversationId as any,
         body,
         clientRequestId,
       });
@@ -301,13 +308,13 @@ export function useRealtimeInbox({
 
   return {
     activeConversationId,
-    conversation,
-    conversations,
+    conversation: conversation as any,
+    conversations: conversations as any,
     isLiveConversationLoading: Boolean(activeConversationId) && liveConversation === undefined && !conversation,
     isSending,
     isSearching: deferredSearch.length > 0 && liveSearchResults === undefined,
     search,
-    searchResults: filteredSearchResults,
+    searchResults: filteredSearchResults as any,
     sendError,
     setSearch,
     handleSelectConversation,
