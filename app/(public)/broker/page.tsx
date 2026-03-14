@@ -144,7 +144,7 @@ export default function BrokerPage() {
                         كن جزءاً من البنية التحتية لعنان وابدأ في توسيع نطاق صفقاتك العقارية في جميع مدن المملكة.
                     </p>
                     <ActionRow className="flex flex-col sm:flex-row gap-8 justify-center pt-8">
-                        <Button href="/signin" variant="white" className="border-none shadow-2xl px-12 py-5">انضم للشبكة</Button>
+                        <Button href="/signin" variant="white" className="border-none shadow-none px-12 py-5">انضم للشبكة</Button>
                         <Button href="/terms" variant="outline" className="border-white text-white hover:bg-white/10 px-12 py-5">شروط الاستخدام</Button>
                     </ActionRow>
                 </div>

@@ -1,5 +1,6 @@
 import type { PaginationResult } from "convex/server";
 import { z } from "zod";
+import { uploadedFileReferenceSchema } from "@/server/contracts/files";
 
 export const propertyStatusSchema = z.enum(["available", "sold", "reserved"]);
 export const publicationStateSchema = z.enum(["draft", "published", "archived"]);
@@ -36,7 +37,7 @@ export const createPropertyInputSchema = z.object({
   area: z.string().optional(),
   status: propertyStatusSchema.optional(),
   bankId: z.string().optional(),
-  imageIds: z.array(z.string()).optional(),
+  media: z.array(uploadedFileReferenceSchema).optional(),
 });
 
 /**
@@ -68,8 +69,8 @@ export type PropertyDetail = {
   publicationState?: z.infer<typeof publicationStateSchema>;
   searchText?: string;
   bankId?: string;
-  imageId?: string;
-  imageIds?: string[];
+  heroImage?: import("@/server/contracts/files").UploadedFileReference | null;
+  media?: import("@/server/contracts/files").UploadedFileReference[];
   body?: unknown;
 };
 

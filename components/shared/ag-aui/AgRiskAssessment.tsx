@@ -1,6 +1,11 @@
 import { ShieldAlert, AlertTriangle, ShieldCheck, Zap, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * WHY:   Institutional workflows often require a quick risk snapshot before taking commercial actions.
+ * WHAT:  Renders a mock risk assessment panel with category scores and a committee recommendation.
+ * HOW:   Uses a fixed local array to compute bars and status tones, keeping the component pure and presentational.
+ */
 export default function AgRiskAssessment() {
     const risks = [
         { label: "المخاطر السوقية", score: 24, status: "منخفضة" },
@@ -56,7 +61,7 @@ export default function AgRiskAssessment() {
                     <div dir="rtl">
                         <div className="text-[10px] font-black uppercase text-white mb-2 tracking-[0.2em]">توصية لجنة المخاطر</div>
                         <p className="text-xs font-bold text-slate-400 leading-relaxed italic">
-                            "المخاطر التشغيلية مرتفعة بسبب تأخر توريد المواد الأولية للموقع (أ). ننصح بزيادة وتيرة المتابعة الأسبوعية وتفعيل خطة الطوارئ البديلة."
+                            &quot;المخاطر التشغيلية مرتفعة بسبب تأخر توريد المواد الأولية للموقع (أ). ننصح بزيادة وتيرة المتابعة الأسبوعية وتفعيل خطة الطوارئ البديلة.&quot;
                         </p>
                     </div>
                 </div>

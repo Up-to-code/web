@@ -44,7 +44,7 @@ export async function listRedOrganizations(
   dependencies: RedOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationSummary[]> {
   const { session } = await getRedOwnerContext(dependencies);
-  return dependencies.repository.listForUser(session.context.userId);
+  return dependencies.repository.listForCurrentUser(session.token);
 }
 
 /**
@@ -57,26 +57,21 @@ export async function createRedOrganization(
   dependencies: RedOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationSummary> {
   const session = await dependencies.requireSession();
-  return dependencies.repository.createForUser({
-    authUserId: session.context.userId,
-    email: session.context.email,
-    displayName: session.context.name,
-    input: { name: input.name, type: "red" },
-  });
+  return dependencies.repository.createForCurrentUser(session.token, { name: input.name, type: "red" });
 }
 
 export async function listRedTeamMembers(
   dependencies: RedOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationTeamMember[]> {
-  const { ownerType, ownerId } = await getRedOwnerContext(dependencies);
-  return dependencies.repository.listTeamMembers({ ownerType, ownerId });
+  const { session } = await getRedOwnerContext(dependencies);
+  return dependencies.repository.listCurrentTeamMembers(session.token);
 }
 
 export async function listRedTeamInvites(
   dependencies: RedOrganizationsDependencies = defaultDependencies,
 ): Promise<OrganizationInviteSummary[]> {
-  const { ownerType, ownerId } = await getRedOwnerContext(dependencies);
-  return dependencies.repository.listTeamInvites({ ownerType, ownerId });
+  const { session } = await getRedOwnerContext(dependencies);
+  return dependencies.repository.listCurrentTeamInvites(session.token);
 }
 
 export async function createRedTeamInvite(
@@ -91,25 +86,16 @@ export async function createRedTeamInvite(
       status: 400,
     });
   }
-  const { session, ownerType, ownerId } = await getRedOwnerContext(dependencies);
-  return dependencies.repository.createTeamInvite({
-    ownerType,
-    ownerId,
-    authUserId: session.context.userId,
-    input: parsed.data,
-  });
+  const { session } = await getRedOwnerContext(dependencies);
+  return dependencies.repository.createCurrentTeamInvite(session.token, parsed.data);
 }
 
 export async function cancelRedTeamInvite(
   input: { inviteId: string },
   dependencies: RedOrganizationsDependencies = defaultDependencies,
 ): Promise<void> {
-  const { ownerType, ownerId } = await getRedOwnerContext(dependencies);
-  await dependencies.repository.cancelTeamInvite({
-    ownerType,
-    ownerId,
-    inviteId: input.inviteId,
-  });
+  const { session } = await getRedOwnerContext(dependencies);
+  await dependencies.repository.cancelCurrentTeamInvite(session.token, input.inviteId);
 }
 
 export async function acceptRedTeamInvite(
@@ -117,8 +103,5 @@ export async function acceptRedTeamInvite(
   dependencies: RedOrganizationsDependencies = defaultDependencies,
 ): Promise<void> {
   const session = await dependencies.requireSession();
-  await dependencies.repository.acceptTeamInvite({
-    authUserId: session.context.userId,
-    token: input.token,
-  });
+  await dependencies.repository.acceptCurrentTeamInvite(session.token, input.token);
 }

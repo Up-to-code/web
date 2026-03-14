@@ -12,6 +12,10 @@ describe("broker offers server functions", () => {
       listSent: vi.fn(async () => []),
       listReceived: vi.fn(async () => [{ id: "offer-2", propertyId: "property-1", price: 1, status: "pending" as const }]),
       listMarketplace: vi.fn(async () => []),
+      create: vi.fn(async () => ({ offerId: "offer-1", conversationId: null, starterMessageCreated: false, notification: null })),
+      publish: vi.fn(async () => ({ ok: true as const })),
+      respond: vi.fn(async () => undefined),
+      apply: vi.fn(async () => ({ offerId: "offer-1", conversationId: null, starterMessageCreated: false, notification: null })),
     };
 
     const snapshot = await getBrokerOffersSnapshot({

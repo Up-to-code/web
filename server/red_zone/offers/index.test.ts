@@ -12,6 +12,10 @@ describe("red offers server functions", () => {
       listSent: vi.fn(async () => [{ id: "offer-1", propertyId: "property-1", price: 1, status: "pending" as const }]),
       listReceived: vi.fn(async () => []),
       listMarketplace: vi.fn(async () => []),
+      create: vi.fn(async () => ({ offerId: "offer-1", conversationId: null, starterMessageCreated: false, notification: null })),
+      publish: vi.fn(async () => ({ ok: true as const })),
+      respond: vi.fn(async () => undefined),
+      apply: vi.fn(async () => ({ offerId: "offer-1", conversationId: null, starterMessageCreated: false, notification: null })),
     };
 
     const snapshot = await getRedOffersSnapshot({

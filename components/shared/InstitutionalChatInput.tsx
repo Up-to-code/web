@@ -10,16 +10,24 @@ interface InstitutionalChatInputProps {
   onSend: () => void;
   isSending?: boolean;
   placeholder?: string;
+  layout?: "landing" | "thread";
 }
 
+/**
+ * WHY:  The workspace assistant needs one composer that supports both the centered first-run prompt and the normal thread reply state.
+ * WHAT: Renders a textarea-based composer with send/microphone actions and layout variants for landing and thread modes.
+ * HOW:  Adjusts spacing, minimum height, and helper text based on the `layout` prop while keeping the same send behavior.
+ */
 export default function InstitutionalChatInput({
   value,
   onChange,
   onSend,
   isSending,
   placeholder = "اسأل أنان، أو ابدأ بإنشاء عرض، أو ابحث في مشاريعك...",
+  layout = "thread",
 }: InstitutionalChatInputProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const isLanding = layout === "landing";
 
   React.useEffect(() => {
     if (textareaRef.current) {
@@ -29,7 +37,12 @@ export default function InstitutionalChatInput({
   }, [value]);
 
   return (
-    <div className="relative w-full border-2 border-zinc-200 bg-white shadow-sm rounded-none transition-all duration-400 hover:border-blue-600 focus-within:border-blue-600 overflow-hidden">
+    <div
+      className={cn(
+        "relative w-full overflow-hidden border bg-white transition-colors duration-150 focus-within:border-slate-400",
+        isLanding ? "border-stone-300" : "border-stone-200",
+      )}
+    >
       <textarea
         ref={textareaRef}
         value={value}
@@ -41,32 +54,42 @@ export default function InstitutionalChatInput({
           }
         }}
         placeholder={placeholder}
-        className="w-full resize-none border-none bg-transparent px-8 py-6 text-lg font-bold text-slate-900 placeholder-slate-300 outline-none"
+        className={cn(
+          "w-full resize-none border-none bg-transparent text-slate-900 outline-none placeholder:text-slate-400",
+          isLanding ? "px-8 py-8 text-lg font-semibold" : "px-5 py-4 text-base font-medium",
+        )}
         rows={1}
-        style={{ minHeight: "100px" }}
+        style={{ minHeight: isLanding ? "132px" : "64px" }}
         dir="rtl"
       />
-      
-      <div className="flex items-center justify-between border-t-2 border-zinc-50 bg-slate-50/50 px-6 py-3">
-        <div className="text-[10px] font-black uppercase tracking-widest text-slate-300">
-          اضغط ENTER للإرسال • SHIFT + ENTER لسطر جديد
-        </div>
+
+      <div
+        className={cn(
+          "flex items-center justify-between border-t px-4 py-3",
+          isLanding ? "border-stone-200 bg-stone-50" : "border-stone-100 bg-white",
+        )}
+      >
+        <div className="text-xs text-slate-500">اضغط Enter للإرسال و Shift + Enter لسطر جديد</div>
 
         <div className="flex items-center gap-2">
-          <button className="flex h-12 w-12 items-center justify-center border-2 border-zinc-100 bg-white text-slate-400 transition-all hover:border-blue-600 hover:text-blue-600 rounded-none shadow-sm">
-            <Mic className="h-6 w-6" />
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center border border-stone-200 bg-white text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-700"
+          >
+            <Mic className="h-4 w-4" />
           </button>
           <button
+            type="button"
             onClick={() => onSend()}
             disabled={!value.trim() || isSending}
             className={cn(
-              "flex h-12 w-12 items-center justify-center transition-all duration-300 rounded-none shadow-sm",
-              value.trim() && !isSending 
-                ? "bg-blue-600 text-white hover:bg-blue-700" 
-                : "bg-slate-100 text-slate-300 cursor-not-allowed border-2 border-transparent"
+              "flex h-10 w-10 items-center justify-center transition-colors",
+              value.trim() && !isSending
+                ? "bg-slate-950 text-white hover:bg-slate-800"
+                : "cursor-not-allowed bg-stone-100 text-stone-400"
             )}
           >
-            <ArrowUp className="h-6 w-6" />
+            <ArrowUp className="h-4 w-4" />
           </button>
         </div>
       </div>

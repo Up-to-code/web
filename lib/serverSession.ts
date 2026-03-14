@@ -21,6 +21,22 @@ export async function getAuthenticatedSession() {
   };
 }
 
+export function sanitizeInternalReturnTo(returnTo?: string | null, fallback = "/ws") {
+  if (!returnTo) {
+    return fallback;
+  }
+
+  if (!returnTo.startsWith("/") || returnTo.startsWith("//")) {
+    return fallback;
+  }
+
+  if (returnTo.startsWith("/signin")) {
+    return fallback;
+  }
+
+  return returnTo;
+}
+
 export function buildWorkspaceSecurityAppsPath(clientId?: string) {
   const base = "/ws/me/security/apps";
   return clientId ? `${base}/${encodeURIComponent(clientId)}` : base;

@@ -82,7 +82,7 @@ describe("broker crm server functions", () => {
       { requireBroker: requireBroker(), crmRepository: crmRepository as never, propertiesRepository: {} as never },
     );
     await addBrokerDealDocument(
-      { dealId: "deal-1", storageId: "file-1" },
+      { dealId: "deal-1", document: { key: "file-1", url: "https://files.test/file-1", name: "file-1.pdf" } },
       { requireBroker: requireBroker(), crmRepository: crmRepository as never, propertiesRepository: {} as never },
     );
     expect(crmRepository.updateStage).toHaveBeenCalled();

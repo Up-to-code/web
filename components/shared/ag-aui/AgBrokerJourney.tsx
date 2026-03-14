@@ -68,7 +68,7 @@ export default function AgBrokerJourney() {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+                    <div className="h-2 w-2 rounded-none bg-blue-500 animate-pulse" />
                     <span className="text-[10px] font-black uppercase text-blue-600 tracking-widest">مراقب الآن</span>
                 </div>
             </div>

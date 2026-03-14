@@ -1,11 +1,6 @@
 import { DomainError, toErrorResponse } from "@/server/contracts/errors";
-import { getWorkspaceSnapshotForCurrentUser } from "@/server/domains/workspaces/service";
-import { convexOrganizationsRepository } from "@/server/infrastructure/convex/organizationsRepository";
+import { createCurrentOrganizationInvite } from "@/server/domains/organizations/service";
 import { createOrganizationInviteInputSchema } from "@/server/contracts/organizations";
-
-function toOwnerType(type: "broker" | "red") {
-  return type === "broker" ? "broker" : "RED";
-}
 
 /**
  * WHY:   Organization invite creation needs one HTTP entrypoint for the workspace settings UI.
@@ -25,23 +20,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const workspace = await getWorkspaceSnapshotForCurrentUser();
-    const organization = workspace.organizations[0];
-
-    if (!organization) {
-      throw new DomainError({
-        code: "NOT_FOUND",
-        message: "No organization found for this workspace",
-        status: 404,
-      });
-    }
-
-    const inviteId = await convexOrganizationsRepository.createTeamInvite({
-      ownerType: toOwnerType(organization.type),
-      ownerId: organization.id,
-      authUserId: workspace.session.userId,
-      input: parsed.data,
-    });
+    const inviteId = await createCurrentOrganizationInvite(parsed.data);
 
     return Response.json({ inviteId }, { status: 201 });
   } catch (error) {

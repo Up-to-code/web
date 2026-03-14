@@ -1,5 +1,10 @@
 import { Target, BarChart, TrendingUp, AlertCircle, CheckCircle2, Zap } from "lucide-react";
 
+/**
+ * WHY:   Developers need competitive context to decide pricing and positioning without leaving the workspace.
+ * WHAT:  Renders a mock competitor analysis panel with headline metrics, competitor rows, and a recommendation.
+ * HOW:   Uses static placeholder arrays and dense UI styling; no data fetching or side effects.
+ */
 export default function AgCompetitorAnalysis() {
     return (
         <div className="w-full bg-white overflow-hidden shadow-none">
@@ -68,7 +73,7 @@ export default function AgCompetitorAnalysis() {
                     <div>
                         <div className="text-[10px] font-black uppercase text-emerald-700 mb-1">قرار التسعير الاستراتيجي</div>
                         <p className="text-xs font-bold text-emerald-900 leading-relaxed italic">
-                            "استراتيجية التسعير الحالية منافسة جداً في نطاق الملقا (المرحلة الثانية)، ننصح بالتمسك بالسعر الحالي لزيادة سرعة التدفق النقدي."
+                            &quot;استراتيجية التسعير الحالية منافسة جداً في نطاق الملقا (المرحلة الثانية)، ننصح بالتمسك بالسعر الحالي لزيادة سرعة التدفق النقدي.&quot;
                         </p>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ export type SessionContext = {
   email?: string | null;
   name?: string | null;
   image?: string | null;
+  username?: string | null;
   role?: string;
   brokerId?: string;
   redId?: string;
@@ -24,6 +25,7 @@ export type SessionUser = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  username?: string | null;
   isActive: boolean;
 };
 
@@ -38,6 +40,7 @@ export function toSessionUser(context: SessionContext): SessionUser {
     name: context.name,
     email: context.email,
     image: context.image,
+    username: context.username,
     isActive: context.isActive,
   };
 }

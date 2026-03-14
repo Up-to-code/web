@@ -3,10 +3,20 @@ import { DomainError, normalizeDomainError } from "@/server/contracts/errors";
 import {
   createOrganizationInputSchema,
   type CreateOrganizationInput,
+  type CreateOrganizationInviteInput,
+  type DirectorySearchResult,
+  type IncomingOrganizationInvite,
+  type OffersDirectoryProfile,
+  type OrganizationInviteSummary,
+  type OrganizationMembershipSummary,
   type OrganizationSummary,
+  type OrganizationTeamMember,
+  type UpdateOrganizationInput,
+  type UpdateOrganizationMemberRoleInput,
+  updateOrganizationInputSchema,
+  updateOrganizationMemberRoleInputSchema,
 } from "@/server/contracts/organizations";
-import { createBrokerOrganization } from "@/server/broker_zone/organizations";
-import { createRedOrganization } from "@/server/red_zone/organizations";
+import { resolveSuggestedOrganizationType } from "@/server/contracts/workspace";
 import {
   convexOrganizationsRepository,
   type OrganizationsRepository,
@@ -31,7 +41,7 @@ export async function listOrganizationsForCurrentUser(
   dependencies: OrganizationsServiceDependencies = defaultDependencies,
 ): Promise<OrganizationSummary[]> {
   const session = await dependencies.requireSession();
-  return dependencies.organizationsRepository.listForUser(session.context.userId);
+  return dependencies.organizationsRepository.listForCurrentUser(session.token);
 }
 
 /**
@@ -62,26 +72,132 @@ export async function createOrganizationForCurrentUser(
   }
 
   try {
-    if ((parsed.data as CreateOrganizationInput).type === "broker") {
-      return await createBrokerOrganization(
-        { name: parsed.data.name },
-        {
-          requireSession: dependencies.requireSession,
-          requireBroker: dependencies.requireSession,
-          repository: dependencies.organizationsRepository,
-        },
-      );
-    }
+    const organizationType =
+      (parsed.data as CreateOrganizationInput).type ??
+      resolveSuggestedOrganizationType({
+        role: session.context.role,
+        requestedRole: session.profile?.requestedRole,
+      });
 
-    return await createRedOrganization(
-      { name: parsed.data.name },
-      {
-        requireSession: dependencies.requireSession,
-        requireDeveloper: dependencies.requireSession,
-        repository: dependencies.organizationsRepository,
-      },
-    );
+    return await dependencies.organizationsRepository.createForCurrentUser(session.token, {
+      name: parsed.data.name,
+      type: organizationType,
+    });
   } catch (error) {
     throw normalizeDomainError(error);
   }
+}
+
+export async function getCurrentOrganizationForCurrentUser(
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<{ organization: OrganizationSummary; membership: OrganizationMembershipSummary } | null> {
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.getCurrentOrganization(session.token);
+}
+
+export async function updateCurrentOrganizationForCurrentUser(
+  input: unknown,
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<OrganizationSummary> {
+  const parsed = updateOrganizationInputSchema.safeParse(input);
+  if (!parsed.success) {
+    throw new DomainError({
+      code: "INVALID_ARGUMENT",
+      message: parsed.error.issues[0]?.message ?? "Invalid organization payload",
+      status: 400,
+    });
+  }
+
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.updateCurrentOrganization(session.token, parsed.data as UpdateOrganizationInput);
+}
+
+export async function listCurrentOrganizationTeamMembers(
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<OrganizationTeamMember[]> {
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.listCurrentTeamMembers(session.token);
+}
+
+export async function listCurrentOrganizationTeamInvites(
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<OrganizationInviteSummary[]> {
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.listCurrentTeamInvites(session.token);
+}
+
+export async function createCurrentOrganizationInvite(
+  input: CreateOrganizationInviteInput,
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<string> {
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.createCurrentTeamInvite(session.token, input);
+}
+
+export async function cancelCurrentOrganizationInvite(
+  inviteId: string,
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<void> {
+  const session = await dependencies.requireSession();
+  await dependencies.organizationsRepository.cancelCurrentTeamInvite(session.token, inviteId);
+}
+
+export async function acceptCurrentOrganizationInvite(
+  token: string,
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<void> {
+  const session = await dependencies.requireSession();
+  await dependencies.organizationsRepository.acceptCurrentTeamInvite(session.token, token);
+}
+
+export async function updateCurrentOrganizationMemberRole(
+  membershipId: string,
+  input: unknown,
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<void> {
+  const parsed = updateOrganizationMemberRoleInputSchema.safeParse(input);
+  if (!parsed.success) {
+    throw new DomainError({
+      code: "INVALID_ARGUMENT",
+      message: parsed.error.issues[0]?.message ?? "Invalid member payload",
+      status: 400,
+    });
+  }
+
+  const session = await dependencies.requireSession();
+  await dependencies.organizationsRepository.updateCurrentTeamMemberRole(session.token, {
+    membershipId,
+    input: parsed.data as UpdateOrganizationMemberRoleInput,
+  });
+}
+
+export async function searchCurrentOrganizationDirectoryExact(
+  query: string,
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<DirectorySearchResult[]> {
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.searchDirectoryExact(session.token, query.trim());
+}
+
+export async function listCurrentOrganizationOffersDirectory(
+  role: "broker" | "developer",
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<OffersDirectoryProfile[]> {
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.listOffersDirectoryProfiles(session.token, role);
+}
+
+export async function listIncomingOrganizationInvitesForCurrentUser(
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<IncomingOrganizationInvite[]> {
+  const session = await dependencies.requireSession();
+  return dependencies.organizationsRepository.listIncomingTeamInvites(session.token);
+}
+
+export async function cancelIncomingOrganizationInvite(
+  inviteId: string,
+  dependencies: OrganizationsServiceDependencies = defaultDependencies,
+): Promise<void> {
+  const session = await dependencies.requireSession();
+  await dependencies.organizationsRepository.cancelIncomingTeamInvite(session.token, inviteId);
 }

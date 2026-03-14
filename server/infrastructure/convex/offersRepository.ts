@@ -1,11 +1,22 @@
-import { fetchQuery } from "convex/nextjs";
+import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { apiUnsafe } from "@/lib/convexApi";
-import type { OfferSummary } from "@/server/contracts/offers";
+import type {
+  ApplyToOfferInput,
+  CreateOfferInput,
+  OfferActionResult,
+  OfferSummary,
+  PublishOfferInput,
+  RespondToOfferInput,
+} from "@/server/contracts/offers";
 
 type OffersApiRefs = {
   listSentOffers: unknown;
   listReceivedOffers: unknown;
   listPublicOffers: unknown;
+  createOffer: unknown;
+  publishOffer: unknown;
+  updateOfferStatus: unknown;
+  applyToOffer: unknown;
 };
 
 type RawOfferSummary = {
@@ -15,14 +26,32 @@ type RawOfferSummary = {
   status: OfferSummary["status"];
   publicationState?: OfferSummary["publicationState"];
   visibility?: OfferSummary["visibility"];
+  recipientAuthUserId?: string;
   message?: string;
   description?: string;
   senderName?: string;
+  attachments?: OfferSummary["attachments"];
   property?: {
     _id?: string;
     title?: string;
     address?: string;
     price?: number;
+    heroImage?: { url?: string } | null;
+    media?: { url?: string }[] | null;
+  } | null;
+};
+
+type RawOfferActionResult = {
+  offerId: string;
+  conversationId: string | null;
+  starterMessageCreated: boolean;
+  notification: {
+    notificationId: string;
+    targetUserId: string;
+    targetName: string;
+    organizationName: string;
+    href: string;
+    pushStatus: "pending" | "sent" | "failed" | "skipped";
   } | null;
 };
 
@@ -36,24 +65,35 @@ function mapOffer(offer: RawOfferSummary): OfferSummary {
     status: offer.status,
     publicationState: offer.publicationState,
     visibility: offer.visibility,
+    recipientAuthUserId: offer.recipientAuthUserId,
     message: offer.message,
     description: offer.description,
     senderName: offer.senderName,
+    attachments: offer.attachments,
     property: offer.property
       ? {
           id: offer.property._id ?? offer.propertyId,
           title: offer.property.title ?? "Untitled property",
           address: offer.property.address ?? "Unknown address",
           price: offer.property.price,
+          imageUrl: offer.property.heroImage?.url ?? offer.property.media?.[0]?.url,
         }
       : null,
   };
+}
+
+function mapOfferActionResult(result: RawOfferActionResult): OfferActionResult {
+  return result;
 }
 
 export type OffersRepository = {
   listSent(): Promise<OfferSummary[]>;
   listReceived(): Promise<OfferSummary[]>;
   listMarketplace(): Promise<OfferSummary[]>;
+  create(input: CreateOfferInput): Promise<OfferActionResult>;
+  publish(input: PublishOfferInput): Promise<{ ok: true }>;
+  respond(input: RespondToOfferInput): Promise<void>;
+  apply(input: ApplyToOfferInput): Promise<OfferActionResult>;
 };
 
 /**
@@ -75,5 +115,25 @@ export const convexOffersRepository: OffersRepository = {
   async listMarketplace() {
     const offers = (await fetchQuery(offersApi.listPublicOffers as never, {} as never)) as RawOfferSummary[];
     return offers.map(mapOffer);
+  },
+
+  async create(input) {
+    return mapOfferActionResult(
+      await (fetchMutation(offersApi.createOffer as never, input as never) as Promise<RawOfferActionResult>),
+    );
+  },
+
+  async publish(input) {
+    return fetchMutation(offersApi.publishOffer as never, input as never) as Promise<{ ok: true }>;
+  },
+
+  async respond(input) {
+    await fetchMutation(offersApi.updateOfferStatus as never, input as never);
+  },
+
+  async apply(input) {
+    return mapOfferActionResult(
+      await (fetchMutation(offersApi.applyToOffer as never, input as never) as Promise<RawOfferActionResult>),
+    );
   },
 };

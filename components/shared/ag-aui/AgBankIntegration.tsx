@@ -1,6 +1,11 @@
 import { CreditCard, Landmark, CheckCircle2, Clock, ArrowRight, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * WHY:   Broker/developer workspaces need quick visibility into banking connectivity and balances.
+ * WHAT:  Renders a stylized "bank integration" status panel with mock-linked accounts and a CTA.
+ * HOW:   Uses a static local array to render account cards and a security note, without calling backend services.
+ */
 export default function AgBankIntegration() {
     const accounts = [
         { name: "حساب الجاري - مصرف الراجحي", balance: "1,240,000", status: "نشط", lastSync: "منذ دقيقتين" },
@@ -50,7 +55,7 @@ export default function AgBankIntegration() {
                 <div className="bg-blue-50/50 border-2 border-blue-100 p-6 flex items-start gap-4">
                     <ShieldCheck className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
                     <p className="text-xs font-bold text-slate-700 leading-relaxed italic" dir="rtl">
-                        "يتم تتبع التدفقات النقدية والتحقق من صحة المعاملات عبر بروتوكول المصرفية المفتوحة. جميع البيانات مشفرة وفق معايير المؤسسة."
+                        &quot;يتم تتبع التدفقات النقدية والتحقق من صحة المعاملات عبر بروتوكول المصرفية المفتوحة. جميع البيانات مشفرة وفق معايير المؤسسة.&quot;
                     </p>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { toErrorResponse } from "@/server/contracts/errors";
-import { getWorkspaceSnapshotForCurrentUser } from "@/server/domains/workspaces/service";
+import { getWorkspaceBehaviorForCurrentUser } from "@/server/domains/workspaces/service";
 
 /**
  * WHY:   Workspace pages and future client-side consumers need one gateway entrypoint for the composed workspace payload.
@@ -8,8 +8,8 @@ import { getWorkspaceSnapshotForCurrentUser } from "@/server/domains/workspaces/
  */
 export async function GET() {
   try {
-    const snapshot = await getWorkspaceSnapshotForCurrentUser();
-    return Response.json(snapshot);
+    const behavior = await getWorkspaceBehaviorForCurrentUser();
+    return Response.json(behavior);
   } catch (error) {
     return toErrorResponse(error);
   }

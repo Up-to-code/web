@@ -10,7 +10,9 @@ import type { SidebarProps } from "./types";
 export default function Sidebar({
   user,
   organization,
-  role,
+  visibleZoneKeys,
+  recentAssistantThreads,
+  allAssistantThreads,
   mode = "desktop",
   className,
   titleId,
@@ -27,7 +29,9 @@ export default function Sidebar({
       <SidebarContent
         user={user}
         organization={organization}
-        role={role}
+        visibleZoneKeys={visibleZoneKeys}
+        recentAssistantThreads={recentAssistantThreads}
+        allAssistantThreads={allAssistantThreads}
         mode={mode}
         titleId={titleId}
         onNavigate={onNavigate}

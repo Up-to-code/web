@@ -25,11 +25,25 @@ export type OrganizationSummary = {
 export type OrganizationTeamMember = {
   id: string;
   authUserId: string;
+  membershipId?: string;
   name: string;
   email: string;
-  role?: string;
+  username?: string;
+  role: "manager" | "member" | "viewer";
   roleStatus?: string;
   isActive?: boolean;
+};
+
+export type OrganizationMembershipSummary = {
+  id: string;
+  ownerType: "broker" | "RED";
+  ownerId: string;
+  authUserId: string;
+  profileId: string;
+  role: "manager" | "member" | "viewer";
+  status: "active" | "inactive";
+  createdAt: number;
+  updatedAt: number;
 };
 
 /**
@@ -54,7 +68,7 @@ export type OrganizationInviteSummary = {
  */
 export const createOrganizationInputSchema = z.object({
   name: z.string().trim().min(2, "Organization name must be at least 2 characters").max(120),
-  type: z.enum(["broker", "red"]),
+  type: z.enum(["broker", "red"]).optional(),
 });
 
 /**
@@ -70,3 +84,54 @@ export const createOrganizationInviteInputSchema = z.object({
 });
 
 export type CreateOrganizationInviteInput = z.infer<typeof createOrganizationInviteInputSchema>;
+
+export const updateOrganizationInputSchema = z.object({
+  name: z.string().trim().min(2, "Organization name must be at least 2 characters").max(120),
+});
+
+export type UpdateOrganizationInput = z.infer<typeof updateOrganizationInputSchema>;
+
+export const updateOrganizationMemberRoleInputSchema = z.object({
+  role: z.enum(["manager", "member", "viewer"]),
+});
+
+export type UpdateOrganizationMemberRoleInput = z.infer<typeof updateOrganizationMemberRoleInputSchema>;
+
+export type DirectorySearchResult = {
+  id: string;
+  authUserId: string;
+  email: string;
+  name: string;
+  username?: string;
+  membershipState: "not-member" | "pending-invite" | "member";
+  canMessage: boolean;
+  conversationId?: string | null;
+};
+
+export type OffersDirectoryProfile = {
+  id: string;
+  authUserId: string;
+  email: string;
+  name: string;
+  username?: string;
+  role: "broker" | "developer";
+  organizationName: string;
+  organizationSlug?: string;
+  membershipState: "not-member" | "pending-invite" | "member";
+  canMessage: boolean;
+  conversationId?: string | null;
+};
+
+export type IncomingOrganizationInvite = {
+  id: string;
+  token: string;
+  email: string;
+  role: "manager" | "member" | "viewer";
+  organizationName: string;
+  organizationType: "broker" | "developer";
+  inviterName: string;
+  inviterAuthUserId: string;
+  canMessage: boolean;
+  conversationId?: string | null;
+  expiresAt: number;
+};

@@ -1,5 +1,10 @@
 import { Target, MapPin, Wallet, Clock, Users, ArrowUpRight, ShieldCheck, Zap } from "lucide-react";
 
+/**
+ * WHY:   The CRM layer needs compact, scan-friendly requirement cards for routing and matching.
+ * WHAT:  Renders a mock "client requirement" card with budget/location/type and urgency context.
+ * HOW:   Uses fixed placeholder values and simple layout primitives to keep this component presentational.
+ */
 export default function AgClientRequirement() {
     return (
         <div className="w-full bg-white p-6 flex flex-col gap-8 group">
@@ -7,11 +12,11 @@ export default function AgClientRequirement() {
                 <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center bg-blue-600 text-white relative">
                         <Target className="h-6 w-6" />
-                        <div className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 border-2 border-white rounded-full" />
+                        <div className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 border-2 border-white rounded-none" />
                     </div>
                     <div>
                         <div className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">طلب عميل نشط</div>
-                        <h3 className="text-2xl font-black text-slate-900 leading-tight tracking-tight uppercase">بطاقة "طلب" العميل</h3>
+                        <h3 className="text-2xl font-black text-slate-900 leading-tight tracking-tight uppercase">بطاقة &quot;طلب&quot; العميل</h3>
                     </div>
                 </div>
                 <div className="text-right">

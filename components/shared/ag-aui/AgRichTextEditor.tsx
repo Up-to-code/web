@@ -94,7 +94,7 @@ function ToolbarButton({
   onClick, 
   title 
 }: { 
-  icon: any; 
+  icon: React.ComponentType<{ className?: string }>;
   onClick: () => void; 
   title: string 
 }) {

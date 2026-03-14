@@ -1,8 +1,18 @@
 import { Map as MapIcon, Layers, Maximize2, ZoomIn, Info } from "lucide-react";
 
+function stableRand01(seed: number) {
+    const x = Math.sin(seed * 9999) * 10000;
+    return x - Math.floor(x);
+}
+
+/**
+ * WHY:   Market intelligence needs quick spatial intuition, even before real map data is integrated.
+ * WHAT:  Renders a mock heatmap grid with hover tooltips for neighborhood pricing density.
+ * HOW:   Uses deterministic pseudo-random values (pure) for stable visuals without calling `Math.random()` during render.
+ */
 export default function AgMarketHeatmap() {
     // Mock grid for heatmap density
-    const grid = Array(16).fill(0).map(() => Math.random());
+    const grid = Array.from({ length: 16 }, (_, index) => stableRand01(index + 1));
 
     return (
         <div className="w-full bg-white p-8 flex flex-col gap-8">

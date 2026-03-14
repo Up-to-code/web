@@ -8,7 +8,7 @@ export default function Navbar() {
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b-2 border-slate-100">
             <div className="max-w-[1400px] mx-auto flex items-center justify-between h-16 px-6">
                 <div className="flex items-center gap-12">
-                    <Link href="/" className="flex items-center justify-center rounded-2xl border border-slate-200 bg-white p-2 transition hover:border-slate-300">
+                    <Link href="/" className="flex items-center justify-center rounded-none border-2 border-slate-100 bg-white p-2 transition hover:border-blue-600">
                         <Image
                             src="/brand-mark.svg"
                             alt="عنان"
